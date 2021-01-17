@@ -108,7 +108,7 @@ const Certificate = (props) => {
         setShowCredentialDialog(credentialIssuedAlready);
     },[credentialIssuedAlready]);
     const showCertificate = () => {
-        let type = (localStorage.getItem("agentType" || "")).toLowerCase();
+        let type = process.env.REACT_APP_AGENT?.toLowerCase();
         switch(type){
                 case "medical" : return <CovidForm
                                             connectionName={connectionName.name}
@@ -135,7 +135,7 @@ const Certificate = (props) => {
         }
     }
     const showIssuedCredentials = () => {
-        let type = (localStorage.getItem("agentType" || "")).toLowerCase();
+        let type = process.env.REACT_APP_AGENT?.toLowerCase();
         switch(type){
                 case "medical" : return <Covid/>;
                 case "school" : return <Degree/>;

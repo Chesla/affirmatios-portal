@@ -46,7 +46,7 @@ const Profile = (props) => {
   const setProfilePic = (type) => {
      type = type?.toLowerCase();
       switch(type){
-        case "person" : return <PersonIcon style={{ fontSize: 200 }}/>
+        case "people" : return <PersonIcon style={{ fontSize: 200 }}/>
         case "medical" : return <LocalHospitalIcon style={{ fontSize: 200 }}/>
         case "school" : return <SchoolIcon style={{ fontSize: 200 }}/>
         case "business" : return <BusinessIcon style={{ fontSize: 200 }}/>

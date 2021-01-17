@@ -14,19 +14,16 @@ export const loginUser = (data, actionType) => {
     if(actionType === "login"){
       localStorage.setItem("username",data.username);
       localStorage.setItem("password",data.password);
-      let agentType = data.username.toLowerCase() === "chesla" ? "person" 
-      : data.username.toLowerCase() === "manipal" ? "medical" :
-      data.username.toLowerCase() === "kiit" ? "school" : "buisness";
-      localStorage.setItem("agentType",agentType);
+      let agentType = process.env.REACT_APP_AGENT?.toLowerCase();
       let profileInfo = {};
-      if(agentType === "person"){
+      if(agentType === "people"){
         profileInfo = {
           DID: "QWETVFF",
           firstLastName:"Chesla",
           roles:["verifier","holder"],
           email:"cheslakar@gmail.com",
           mobile:"+91 9591790442",
-          type:"Person",
+          type:"people",
           agentType
         } 
       }else if(agentType === "medical"){
@@ -36,7 +33,7 @@ export const loginUser = (data, actionType) => {
           roles:["verifier","issuer"],
           email:"cheslakar@gmail.com",
           mobile:"+91 9591790442",
-          type:"Person",
+          type:"people",
           agentType
         } 
       }else if(agentType === "school"){
@@ -46,7 +43,7 @@ export const loginUser = (data, actionType) => {
           roles:["verifier","issuer"],
           email:"cheslakar@gmail.com",
           mobile:"+91 9591790442",
-          type:"Person",
+          type:"people",
           agentType
         } 
       }else{
@@ -56,7 +53,7 @@ export const loginUser = (data, actionType) => {
           roles:["verifier","issuer"],
           email:"cheslakar@gmail.com",
           mobile:"+91 9591790442",
-          type:"Person",
+          type:"people",
           agentType
         }
       }

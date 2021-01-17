@@ -9,30 +9,30 @@ export const getAllConnections = (data) => {
     let actionType = true;
     let connections = [];
     if(actionType){
-      let agentType = (localStorage.getItem("agentType" || "")).toLowerCase();
-      if(agentType !== "person"){
+      let agentType = process.env.REACT_APP_AGENT?.toLowerCase();
+      if(agentType !== "people"){
         connections = [{
           identity: "QWETVFF",
           name:"Chesla",
-          type:"person",
+          type:"people",
           verify:true
         },
         {
           identity: "QWETSFF",
           name:"Shubh",
-          type:"person",
+          type:"people",
           verify:false
         },
         {
           identity: "QWETVFFSD",
           name:"Arun",
-          type:"person",
+          type:"people",
           verify:true
         },
         {
           identity: "QWETVFFSD",
           name:"Pratap",
-          type:"person",
+          type:"people",
           verify:true
         }  ]
       }else{

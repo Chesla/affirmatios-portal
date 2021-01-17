@@ -15,6 +15,7 @@ const Header = (props) => {
     const profileInfo = useSelector(
         (state) => state.user.profileInfo
     );
+    console.log(18, process.env)
     return (
       <ThemeProvider theme={theme}>
         <CssBaseline />
@@ -26,7 +27,7 @@ const Header = (props) => {
                 <Link to="/connections" className="nav-bar-items">
                     <Typography variant="h6">Connections</Typography>
                 </Link>
-                {profileInfo.agentType?.toLowerCase() === "person" ?
+                {process.env.AGENT?.toLowerCase() === "people" ?
                 <Link to="/credentails" className="nav-bar-items">
                     <Typography variant="h6">Credentials</Typography>
                 </Link>

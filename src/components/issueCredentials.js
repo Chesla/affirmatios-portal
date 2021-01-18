@@ -26,6 +26,8 @@ import {
 import {
     getAllConnections
 } from "../actions/connectionAction";
+import { getType, setProfileName } from "../constants";
+
 const Certificate = (props) => {
     const dispatch = useDispatch();
     const profileInfo = useSelector(
@@ -64,10 +66,12 @@ const Certificate = (props) => {
         dispatch(getAllConnections());
     }
     const showConnections = () => {
+        
         return (
             <Autocomplete
                 value={connectionName}
                 onChange={(event, newValue) => {
+                    console.log("newValue",newValue);
                     setConnectionName(newValue);
                 }}
                 inputValue={connectionInputValue}
@@ -75,14 +79,23 @@ const Certificate = (props) => {
                     
                     setConnectionInputValue(connectionInputValue);
                 }}
-                renderOption={(option) => (
-                    <React.Fragment>
-                      {option.name} ({option.connection_id})
-                    </React.Fragment>
-                )}
-                getOptionLabel={(option) => option.name||option.connection_id}
+                renderOption={(option) => {
+                    let type = getType(option.their_label || "");
+                    let name = setProfileName(type) || option.connection_id;
+                    return (
+                        <React.Fragment>
+                            {name} ({option.connection_id})
+                        </React.Fragment>
+                    )
+                }
+                }
+                getOptionLabel={(option) => {
+                    let type = getType(option.their_label || "");
+                    let name = setProfileName(type) || option.connection_id;
+                    return name || option.connection_id
+                }}
                 id="controllable-connection"
-                options={connections||[]}
+                options={connections.filter((c)=> c.state === "active")||[]}
                 style={{ width: 300 }}
                 renderInput={(params) => <TextField {...params} label="Connection Name" variant="outlined" />}
             />
@@ -108,23 +121,25 @@ const Certificate = (props) => {
     },[credentialIssuedAlready]);
     const showCertificate = () => {
         let type = process.env.REACT_APP_AGENT?.toLowerCase();
+        let nametype = getType(connectionName.their_label || "");
+        let name = setProfileName(nametype) || connectionName.connection_id;
         switch(type){
                 case "medical" : return <CovidForm
-                                            connectionName={connectionName.name}
+                                            connectionName={name}
                                             profileName={profileInfo.firstLastName}
                                             submitCredentialForm={((credentialParam)=>{
                                                 dispatch(loader(true));
                                                 dispatch(issueCredential(credentialParam, "medical"))
                                             })}/>;
                 case "school" : return <DegreeForm 
-                                            connectionName={connectionName.name}
+                                            connectionName={name}
                                             profileName={profileInfo.firstLastName}
                                             submitCredentialForm={((credentialParam)=>{
                                                 dispatch(loader(true));
                                                 dispatch(issueCredential(credentialParam, "school"))
                                             })}/>;
                 case "business" : return <ExperienceForm
-                                            connectionName={connectionName.name}
+                                            connectionName={name}
                                             profileName={profileInfo.firstLastName}
                                             submitCredentialForm={((credentialParam)=>{
                                                 dispatch(loader(true));
@@ -163,7 +178,7 @@ const Certificate = (props) => {
                 </div>
             }
         </Grid>
-        {connectionName && connectionName.name ?
+        {connectionName && connectionName.connection_id ?
             showCertificate()
         :   null
         }

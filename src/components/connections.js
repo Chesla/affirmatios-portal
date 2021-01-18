@@ -231,75 +231,6 @@ const Connections = (props) => {
   const acceptConnection = (nc) => {
     console.log("acceptConnection",nc);
   }
-  // const showNewconnections = () => {
-  //   let newConnections = {};
-  //   let agents = [];
-  //   if(process.env.REACT_APP_AGENT?.toLowerCase() === "people"){
-  //     agents = ["medical","business","school"];
-  //   }else if(process.env.REACT_APP_AGENT?.toLowerCase() === "medical"){
-  //     agents = ["people","business","school"];
-  //   }else if(process.env.REACT_APP_AGENT?.toLowerCase() === "business"){
-  //     agents = ["people","medical","school"];
-  //   }else if(process.env.REACT_APP_AGENT?.toLowerCase() === "school"){
-  //     agents = ["people","medical","business"];
-  //   }
-  //   for(let i=0; i<agents.length;i++){
-  //     let alias = getCookieValue(agents[i]+'alias');
-  //     if(alias){
-  //       let rk = getCookieValue(agents[i]+'recipientKeys');
-  //       newConnections[agents[i]]={
-  //         "@type": getCookieValue(agents[i]+'@type'),
-  //         "@id": getCookieValue(agents[i]+'@id'),
-  //         "label": getCookieValue(agents[i]+'label'),
-  //         "serviceEndpoint": getCookieValue(agents[i]+'serviceEndpoint'),
-  //         "recipientKeys":JSON.parse(rk)
-  //       }
-  //     }
-  //   }
-    
-  //   return Object.values(newConnections||{}).map((nc)=>{
-  //     let connectionLabel = nc.label;
-  //     let type = connectionLabel?.toLowerCase().includes("hospital")?"medical":
-  //     connectionLabel?.toLowerCase().includes("business")?"business":
-  //     connectionLabel?.toLowerCase().includes("business")?"school":
-  //     "people";
-  //     let connectionName = connectionLabel?.toLowerCase().includes("hospital")?"Manipal Hospital":
-  //     connectionLabel?.toLowerCase().includes("business")?"TCS":
-  //     connectionLabel?.toLowerCase().includes("business")?"KIIT Unviersity":
-  //     "Chesla"
-  //     return(
-  //       <Grid item xs={12} md={4}>
-  //         <div className="certificate-container">
-  //               <Grid
-  //                   container
-  //                   spacing={2}
-  //                   alignItems={"center"}
-  //                   >
-  //                   <Grid item xs={6} md={3}>
-  //                       <div className="image-container">
-  //                           {setProfilePic(type)}
-  //                       </div>
-  //                   </Grid>
-  //                   <Grid item xs={6} md={9}>
-  //                       <div className="certificate-issuer">
-  //                           {connectionName}
-  //                       </div>
-  //                   </Grid>
-  //                       <Grid item xs={12} md={12}>
-  //                           <Button
-  //                               variant="contained"
-  //                               className="full-width"
-  //                               onClick={()=>{acceptConnection(nc)}}
-  //                           >
-  //                               ACCEPT 
-  //                           </Button>
-  //                       </Grid>
-  //               </Grid>
-  //               </div>
-  //       </Grid>
-  //     )
-  //   })
-  // }
   return (
     <React.Fragment>
         {showLoader ? (
@@ -322,13 +253,21 @@ const Connections = (props) => {
               >
               <Grid item xs ={12} md={6}>Connections</Grid>
               <Grid item xs ={12} md={3}>
-                {process.env.REACT_APP_AGENT?.toLowerCase() !== "people" &&
+                {process.env.REACT_APP_AGENT?.toLowerCase() !== "people" ?
                   <Button
                       variant="contained"
                       className="full-width"
                       onClick={()=>sendConnection()}
                   >
                       CONNECT
+                  </Button>
+                  :
+                  <Button
+                      variant="contained"
+                      className="full-width"
+                      onClick={()=>sendConnection()}
+                  >
+                      CONNECT TO A EXISTING LINK
                   </Button>
                 }
               </Grid>

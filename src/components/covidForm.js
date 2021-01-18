@@ -18,30 +18,20 @@ import PropTypes from "prop-types";
   
   const CovidForm = (props) => {
     const [covidParam ,setCovidParam] = useState({
-        ownerName: props.profileName,
-        certificateName:"",
-        department:"TO WHOMSOEVER IT MAY CONCERN",
         name:props.connectionName,
-        gender:"",
+        sex:"",
         age:"",
-        remarks:"",
-        location:"",
-        issuedOn:"",
-        issuedBy:"",
-        issuedByTeam:""
+        address:"",
+        place:"",
+        date:"",
     })
     const [covidParamError ,setCovidParamError] = useState({
-        ownerName: false,
-        certificateName:false,
-        department:false,
         name:false,
-        gender:false,
+        sex:false,
         age:false,
-        remarks:false,
-        location:false,
-        issuedOn:false,
-        issuedBy:false,
-        issuedByTeam:false
+        address:false,
+        place:false,
+        date:false,
     })
     const setCovidCredentials = (e) => {
         setCovidParam({ ...covidParam, ...{ [e.target.name]: e.target.value } });
@@ -84,16 +74,7 @@ import PropTypes from "prop-types";
   
                <Grid item xs={12} md={12} >
                     <div className={"degree-certificate-name"}>
-                        <TextField 
-                            id="certificateName" 
-                            name="certificateName"
-                            onChange={setCovidCredentials}
-                            value={covidParam.certificateName}
-                            error={covidParamError.certificateName}
-                            helperText={
-                                covidParamError.certificateName ? "Please enter certificate name." : ""
-                            }
-                            placeholder={"eg: Covid Certificate"}/>
+                            COVID CERTIFICATE
                     </div>
                </Grid>
                 
@@ -113,19 +94,19 @@ import PropTypes from "prop-types";
                    <div className={"flex-display"}>
                        <div className={"flex-display-text"}>
                             <FormControl>
-                                <InputLabel id="demo-gender-label">Sex</InputLabel>
+                                <InputLabel id="demo-sex-label">Sex</InputLabel>
                                     <Select
-                                        labelId="demo-gender-label"
-                                        id="gender"
-                                        name="gender"
-                                        value={covidParam.gender}
+                                        labelId="demo-sex-label"
+                                        id="sex"
+                                        name="sex"
+                                        value={covidParam.sex}
                                         onChange={setCovidCredentials}
                                         >
                                         <MenuItem value={"M"}>Male</MenuItem>
                                         <MenuItem value={"F"}>Female</MenuItem>
                                     </Select>
                             </FormControl>
-                            {covidParamError.gender && <FormHelperText>Please select gender.</FormHelperText>}
+                            {covidParamError.sex && <FormHelperText>Please select sex.</FormHelperText>}
                        </div>
                        <div> Age </div>
                        <div className={"flex-display-text"}>
@@ -144,14 +125,14 @@ import PropTypes from "prop-types";
                        <div> Residing at </div>
                        <div className={"flex-display-text"}>
                             <TextField 
-                                id="remarks" 
-                                name="remarks"
-                                value={covidParam.remarks}
+                                id="address" 
+                                name="address"
+                                value={covidParam.address}
                                 onChange={setCovidCredentials}
                                 placeholder={"eg: 501, UKN Espernza, Thubrahalli, Whitefield, Bengaluru, Karnataka, 560066"}
-                                error={covidParamError.remarks}
+                                error={covidParamError.address}
                                 helperText={
-                                    covidParamError.remarks ? "Please enter address." : ""
+                                    covidParamError.address ? "Please enter address." : ""
                                 }/> 
                        </div>
                    <div>
@@ -176,14 +157,14 @@ import PropTypes from "prop-types";
                                     <div> Place:    </div>
                                     <div className={"flex-display-text"}>
                                         <TextField 
-                                            id="location" 
-                                            name="location"
-                                            value={covidParam.location}
+                                            id="place" 
+                                            name="place"
+                                            value={covidParam.place}
                                             onChange={setCovidCredentials}
                                             placeholder={"eg: Bengaluru"}
-                                            error={covidParamError.location}
+                                            error={covidParamError.place}
                                             helperText={
-                                                covidParamError.location ? "Please enter place." : ""
+                                                covidParamError.place ? "Please enter place." : ""
                                             }/>
                                     </div>
                                 </div>
@@ -193,14 +174,14 @@ import PropTypes from "prop-types";
                                     <div> Date:    </div>
                                     <div className={"flex-display-text"}>
                                         <TextField 
-                                            id="issuedOn" 
-                                            name="issuedOn"
-                                            value={covidParam.issuedOn}
+                                            id="date" 
+                                            name="date"
+                                            value={covidParam.date}
                                             onChange={setCovidCredentials}
                                             placeholder={"eg: 12/14/2020"}
-                                            error={covidParamError.issuedOn}
+                                            error={covidParamError.date}
                                             helperText={
-                                                covidParamError.issuedOn ? "Please enter issued on date." : ""
+                                                covidParamError.date ? "Please enter issued on date." : ""
                                             }/>
                                     </div>
                                 </div>
@@ -216,28 +197,10 @@ import PropTypes from "prop-types";
                         style={{textAlign:"right"}}
                     >
                         <Grid item xs={12} md={12}>
-                            <TextField 
-                                    id="issuedBy" 
-                                    name="issuedBy"
-                                    value={covidParam.issuedBy}
-                                    onChange={setCovidCredentials}
-                                    placeholder={"Issuer name"}
-                                    error={covidParamError.issuedBy}
-                                    helperText={
-                                        covidParamError.issuedBy ? "Please enter issuer name." : ""
-                                    }/>
+                            Ritu Kumar
                         </Grid>
                         <Grid item xs={12} md={12}>
-                            <TextField 
-                                    id="issuedByTeam" 
-                                    name="issuedByTeam"
-                                    value={covidParam.issuedByTeam}
-                                    onChange={setCovidCredentials}
-                                    placeholder={"Issuer department"}
-                                    error={covidParamError.issuedByTeam}
-                                    helperText={
-                                        covidParamError.issuedByTeam ? "Please enter issuer department." : ""
-                                    }/>
+                            Medical Officer
                         </Grid>
                     </Grid>
                 </Grid>

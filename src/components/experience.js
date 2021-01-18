@@ -20,6 +20,13 @@ const Experience = (props) => {
         setExperienceLetter(props.readFrom||{});
       }
     },[]);
+    useEffect(()=>{
+        if(props.readFrom){
+            setExperienceLetter(props.readFrom||data);
+        }else{
+            setExperienceLetter(data);
+        }
+      },[data]);
     console.log("experienceLetter",experienceLetter,props.readFrom);
     if(!experienceLetter || Object.keys(experienceLetter).length===0){
         return null;

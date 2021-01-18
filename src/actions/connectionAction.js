@@ -44,61 +44,6 @@ export const getAllConnections = () => {
   };
 }
 
-export const verifyParticularConnection = (data) => {
-    return function (dispatch) {
-      let url = `/api/verifyConnection/${data}`;
-      dispatch({
-        type: Actions.LOADER,
-        payload:false
-      })
-      let actionType = true;
-      if(actionType){
-        dispatch({
-            type: Actions.VERIFY_CONNECTION,
-            payload: {
-                errorMessage:'',
-                connectionVerified:true
-            }
-        });
-      }else{
-        dispatch({
-          type:  Actions.VERIFY_CONNECTION,
-          payload: {
-            errorMessage:'Some error occured. Please try again later.',
-            connectionVerified:false
-          }
-        });
-      }
-    }
-  //   return async function (dispatch) {
-  //     const response = await fetch(url, {
-  //       method: "GET",
-  //       certificates: "include",
-  //     });
-  //     dispatch({
-  //       type: Actions.LOADER,
-  //       payload:false
-  //     })
-  //     if (response.status === 200) {
-  //         dispatch({
-  //             type: Actions.VERIFY_CONNECTION,
-  //             payload: {
-  //                 errorMessage:'',
-  //                 connections: data.connections
-  //             }
-  //         });
-  //     } else {
-  //         dispatch({
-  //             type:  Actions.VERIFY_CONNECTION,
-  //             payload: {
-  //               errorMessage:'Some error occured. Please try again later',
-  //               connections:[]
-  //             }
-  //         });
-  //     }
-  //   };
-  }
-
 export const setConnectionMessage = (connectionVerified,errorMessage) => {
     return {
       type: Actions.SET_CONNECTION_MESSAGE,
@@ -162,6 +107,49 @@ export const sendConnectionRequest = () => {
           }
         });
       });
+    }
+  };
+}
+
+export const acceptConnectionRequest = (data, cb) => {
+  return async function (dispatch) {
+    let url = process.env.REACT_APP_BASE_URL+"/connections/accept";
+    const response = await fetch(url, {
+      method: "POST",
+      body: JSON.stringify(data),
+    });
+    dispatch({
+      type: Actions.LOADER,
+      payload:false
+    })
+    if (response.status === 200) {
+      const resp = response.json();
+      resp.then((data) => {
+        console.log(183, data);
+        cb();
+        dispatch(getAllConnections());
+        dispatch({
+          type:  Actions.ACCEPT_CONNECTION_REQUEST,
+          payload: {
+            errorMessage:'',
+          }
+        })
+      })
+      .catch(() => {
+        dispatch({
+          type:  Actions.ACCEPT_CONNECTION_REQUEST,
+          payload: {
+            errorMessage:'Some error occured. Please try again later',
+          }
+        });
+      });
+    } else {
+      dispatch({
+          type:  Actions.ACCEPT_CONNECTION_REQUEST,
+          payload: {
+            errorMessage:'Some error occured. Please try again later',
+          }
+        });
     }
   };
 }

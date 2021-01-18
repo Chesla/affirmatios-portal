@@ -9,7 +9,6 @@ const INITIAL_STATE = {
     connectionSent:""
 };
 const ConnectionReducer = (state = INITIAL_STATE, action) => {
-    console.log(action);
     switch (action.type) {
         case Actions.GET_ALL_CONNECTIONS : {
             const {payload} = action;
@@ -46,10 +45,16 @@ const ConnectionReducer = (state = INITIAL_STATE, action) => {
         }
         case Actions.SET_CONNECTION_SUCCESSFULLY : {
             const {payload} = action;
-            console.log(48, payload);
             return{
                 ...state,
                 connectionSentSuccessfully:payload.connectionSentSuccessfully,
+            }
+        }
+        case Actions.ACCEPT_CONNECTION_REQUEST: {
+            const { payload } = action;
+            return{
+                ...state,
+                errorMessage:payload.errorMessage|| "",
             }
         }
         default : {

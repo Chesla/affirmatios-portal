@@ -19,7 +19,14 @@ const Covid = (props) => {
       setCovidLetter(props.readFrom||{});
     }
   },[])
-  
+  useEffect(()=>{
+    if(props.readFrom){
+        setCovidLetter(props.readFrom||data);
+    }else{
+        setCovidLetter(data);
+    }
+  },[data]);
+  console.log("covidLetter",data,covidLetter);
   if(!covidLetter || Object.keys(covidLetter).length===0){
       return null;
   }

@@ -136,10 +136,10 @@ const Credentials = (props) => {
         ) : null}
         {errorMessage && <Alert severity="error">{errorMessage}</Alert>}
         <Card className="layout-card">
-          <CardHeader title={"Certificates"}/>
+          <CardHeader title={"Credentials"}/>
           <CardContent className="certificate-grid">
           {certificates === null || certificates.length === 0? 
-            <div>No Certificates Available.</div>
+            <div>No Credentials Available.</div>
             :
             <Grid
               container

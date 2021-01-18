@@ -20,6 +20,13 @@ const Degree = (props) => {
         setDegreeLetter(props.readFrom||{});
       }
     },[]);
+    useEffect(()=>{
+        if(props.readFrom){
+            setDegreeLetter(props.readFrom||data);
+        }else{
+            setDegreeLetter(data);
+        }
+      },[data]);
     if(!degreeLetter || Object.keys(degreeLetter).length===0){
         return null;
     }

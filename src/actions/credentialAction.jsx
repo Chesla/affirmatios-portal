@@ -95,22 +95,12 @@ const credentialsData = (certificateType) => {
     }
   }else if(certificateType?.toLowerCase() === "medical"){
     data = {
-      name: " Chesla",
-      gender: "F",
-      designation: "",
-      department:" TO WHOMSOEVER IT MAY CONCERN",
-      doj:" 06/16/2014",
-      dol:" 09/11/2015",
-      remarks:"501, UKN Espernza, Thubrahalli, Whitefield, Bengaluru, Karnataka, 560066 ",
-      issuedOn:" 12/14/2020",
-      issuedBy:" Ritu Kumar",
-      issuedByTeam: " Medical Officer",
-      location:" Bengaluru",
-      reason:" Resigned",
-      age:"27",
-      verificationId: "TCS/EMP/834930",
-      ownerName: "Manipal Hospital",
-      certificateName: "COVID CERTIFICATE"
+      "name": "Arun",
+      "sex": "male",
+      "age": 27,
+      "address": "501, UKN Espernza, Thubrahalli, Whitefield, Bengaluru, Karnataka, 560066 ",
+      "place": "Bangalore",
+      "date": "18-Jan-2021"
     }
   } else {
     data = {

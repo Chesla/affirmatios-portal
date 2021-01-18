@@ -46,13 +46,13 @@ const Covid = (props) => {
           >
             <Grid item xs={12} md={12}>
                   <div className={"Covid-department-name"}>
-                      <b> {covidLetter.department || "NA"} </b>
+                      <b> TO WHOMSOEVER IT MAY CONCERN </b>
                   </div> 
              </Grid>
 
              <Grid item xs={12} md={12} >
                   <div className={"Covid-certificate-name"}>
-                      <b> {covidLetter.certificateName || "NA"} </b>
+                      <b> COVID CERTIFICATE </b>
                   </div>
              </Grid>
               
@@ -67,9 +67,9 @@ const Covid = (props) => {
           >
              <Grid item xs={12} md={12} className={"Covid-certificate-details"}>
                  This is to certify that <b>{covidLetter.name || "NA"}</b> <br/>
-                 Sex <b>{covidLetter.gender ? covidLetter.gender==="F" ? "female" : "male" : "NA" }</b>, 
+                 Sex <b>{covidLetter.sex ? covidLetter.sex==="F" ? "female" : "male" : "NA" }</b>, 
                  Age <b>{covidLetter.age || "NA"}yrs.</b>,
-                 Residing at <b>{covidLetter.remarks || "NA"}</b> <br/>
+                 Residing at <b>{covidLetter.address || "NA"}</b> <br/>
                  is healthy and not suffering from COVID-19.
              </Grid>
              
@@ -90,10 +90,10 @@ const Covid = (props) => {
                           style={{textAlign:"left"}}
                       >
                           <Grid item xs={12} md={12}>
-                              Place: <b>{covidLetter.location || "NA"}</b>
+                              Place: <b>{covidLetter.place || "NA"}</b>
                           </Grid>
                           <Grid item xs={12} md={12}>
-                              Date: <b>{covidLetter.issuedOn || "NA"}</b>
+                              Date: <b>{covidLetter.date || "NA"}</b>
                           </Grid>
                       </Grid>
                   </Grid>

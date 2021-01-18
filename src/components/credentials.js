@@ -79,7 +79,7 @@ const Credentials = (props) => {
       case "business" : return "EXPERIENCE LETTER"
       default : return null;
     }
-}
+  }
   const showCertificates = () => {
     return (certificates||[]).map((c)=>{
         return(
@@ -145,7 +145,7 @@ const Credentials = (props) => {
               container
               spacing={2}
               alignItems={"center"}
-              justify="center"
+              justify="flex-start"
             >
                 {showCertificates()}
             </Grid>

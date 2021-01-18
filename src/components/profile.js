@@ -10,9 +10,10 @@ import {
     CircularProgress,
 } from "@material-ui/core";
 import PersonIcon from '@material-ui/icons/Person';
-import LocalHospitalIcon from '@material-ui/icons/LocalHospital';
-import SchoolIcon from '@material-ui/icons/School';
-import BusinessIcon from '@material-ui/icons/Business';
+import KIIT from "../images/kiitlogo.png";
+import Manipal from "../images/manipallogo.jpeg";
+import TCS from "../images/tcslogo.png";
+
 import {
   loginUser,
   loader
@@ -43,16 +44,24 @@ const Profile = (props) => {
         login();
     }
   },[])
-  const setProfilePic = (type) => {
-     type = type?.toLowerCase();
+  const setProfilePic = () => {
+    let type = process.env.REACT_APP_AGENT?.toLowerCase();
       switch(type){
         case "people" : return <PersonIcon style={{ fontSize: 200 }}/>
-        case "medical" : return <LocalHospitalIcon style={{ fontSize: 200 }}/>
-        case "school" : return <SchoolIcon style={{ fontSize: 200 }}/>
-        case "business" : return <BusinessIcon style={{ fontSize: 200 }}/>
+        case "medical" : return <img src={Manipal} width={230} height={160}/>
+        case "school" : return <img src={KIIT} width={230} height={160}/>
+        case "business" : return <img src={TCS} width={230} height={160}/>
         default : return null;
       }
-    
+  }
+  const setProfileName = () => {
+    let type = process.env.REACT_APP_AGENT?.toLowerCase();
+      switch(type){
+        case "medical" : return "Manipal Hospitals"
+        case "school" : return "KIIT University"
+        case "business" : return "TCS"
+        default : return profileInfo.firstLastName;
+      }
   }
   return (
     <React.Fragment>
@@ -64,7 +73,7 @@ const Profile = (props) => {
         </div>
       ) : null}
         <Card className="layout-card">
-          <CardHeader title={`Hello ${profileInfo.firstLastName}`}/>
+          <CardHeader title={`Hello ${setProfileName()}`}/>
           <CardContent className="profile-grid">
             <Grid
               container
@@ -72,7 +81,7 @@ const Profile = (props) => {
             >
                 <Grid item xs={6} md={3}>
                     <div className="image-container">
-                        {setProfilePic(profileInfo.type)}
+                        {setProfilePic()}
                     </div>
                 </Grid>
                 <Grid item xs={6} md={3}>

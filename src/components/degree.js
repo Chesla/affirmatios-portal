@@ -5,14 +5,21 @@ import {
     CardContent,
     Grid,
 } from "@material-ui/core";
-import React from "react";
+import React , {useEffect, useState}from "react";
 import { useSelector } from "react-redux";
 import KIIT from "../images/kiitlogo.png";
+import PropTypes from "prop-types";
 
 const Degree = (props) => {
-    const degreeLetter = useSelector(
+    const data = useSelector(
         (state) => state.credential.certificateDetails
     );
+    const [degreeLetter , setDegreeLetter] = useState(data || {});
+    useEffect(()=>{
+      if(props.readFrom){
+        setDegreeLetter(props.readFrom||{});
+      }
+    },[]);
     if(!degreeLetter || Object.keys(degreeLetter).length===0){
         return null;
     }
@@ -21,7 +28,7 @@ const Degree = (props) => {
         <React.Fragment>
         <Card>
           <CardHeader 
-            title={<img src={KIIT} className={"office-logo"} alt={degreeLetter.ownerName}/>}
+            title={<img src={KIIT} className={"office-logo"} alt={degreeLetter.ownerName || "NA"}/>}
           />
           <CardContent className="degree-grid">
             <Grid
@@ -32,7 +39,7 @@ const Degree = (props) => {
             >
                <Grid item xs={12} md={12} >
                     <div className={"degree-certificate-name"}>
-                        <b> {degreeLetter.certificateName} </b>
+                        <b> {degreeLetter.certificateName || "NA"} </b>
                     </div>
                </Grid>
                 <Grid item xs={12} md={12} >
@@ -42,7 +49,7 @@ const Degree = (props) => {
                </Grid>
                <Grid item xs={12} md={12}>
                     <div className={"degree-department-name"}>
-                        <b> {degreeLetter.department} </b>
+                        <b> {degreeLetter.department || "NA"} </b>
                     </div> 
                </Grid>
             </Grid>
@@ -54,11 +61,11 @@ const Degree = (props) => {
               style={{textAlign:"left"}}
             >
                <Grid item xs={12} md={12} className={"degree-certificate-details"}>
-                   This is to certify that <b>{degreeLetter.name}</b> <br/>
-                   bearing the Registration No. <b>{degreeLetter.verificationId}</b> <br/>
-                   has successfully completed in the <b>{degreeLetter.dol}</b> <br/>
+                   This is to certify that <b>{degreeLetter.name || "NA"}</b> <br/>
+                   bearing the Registration No. <b>{degreeLetter.verificationId || "NA"}</b> <br/>
+                   has successfully completed in the <b>{degreeLetter.dol || "NA"}</b> <br/>
                    all the prescribed requirements under the regulations <br/>
-                   for the degree of <b>{degreeLetter.department}</b>
+                   for the degree of <b>{degreeLetter.department || "NA"}</b>
                </Grid>
                
             </Grid>
@@ -78,10 +85,10 @@ const Degree = (props) => {
                             style={{textAlign:"left"}}
                         >
                             <Grid item xs={12} md={12}>
-                                Place: <b>{degreeLetter.location}</b>
+                                Place: <b>{degreeLetter.location || "NA"}</b>
                             </Grid>
                             <Grid item xs={12} md={12}>
-                                Date: <b>{degreeLetter.issuedOn}</b>
+                                Date: <b>{degreeLetter.issuedOn || "NA"}</b>
                             </Grid>
                         </Grid>
                     </Grid>
@@ -94,10 +101,10 @@ const Degree = (props) => {
                         style={{textAlign:"right"}}
                     >
                         <Grid item xs={12} md={12}>
-                            {degreeLetter.issuedBy}
+                            {degreeLetter.issuedBy || "NA"}
                         </Grid>
                         <Grid item xs={12} md={12}>
-                            {degreeLetter.issuedByTeam}
+                            {degreeLetter.issuedByTeam || "NA"}
                         </Grid>
                     </Grid>
                 </Grid>
@@ -111,3 +118,6 @@ const Degree = (props) => {
 export default Degree;
 
 
+Degree.propTypes = {
+    readFrom: PropTypes.any,
+  };

@@ -6,7 +6,8 @@ const INITIAL_STATE = {
     certificateDetails:null,
     errorMessage:"",
     credentialIssued:null,
-    credentialIssuedAlready:null
+    credentialIssuedAlready:null,
+    certificateAlreadyRequested:[]
 };
 const credentialReducer = (state = INITIAL_STATE, action) => {
     switch (action.type) {
@@ -42,6 +43,14 @@ const credentialReducer = (state = INITIAL_STATE, action) => {
                 credentialIssued:payload.credentialIssued|| false,
                 certificateDetails:payload.certificateDetails|| {},
                 credentialIssuedAlready:payload.credentialIssuedAlready|| null,
+            }
+        }
+        case Actions.CREDENTIALS_ALREADY_REQUESTED : {
+            const {payload} = action;
+            return {
+                ...state,
+                errorMessage:payload.errorMessage|| "",
+                certificateAlreadyRequested:payload.certificateAlreadyRequested|| [],
             }
         }
         case Actions.INIT_CREDENTIALS  :{

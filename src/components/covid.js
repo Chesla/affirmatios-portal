@@ -4,22 +4,31 @@ import {
   CardContent,
   Grid,
 } from "@material-ui/core";
-import React from "react";
+import React, {useEffect, useState} from "react";
 import { useSelector } from "react-redux";
 import Manipal from "../images/manipallogo.jpeg";
+import PropTypes from "prop-types";
 
 const Covid = (props) => {
-  const covidLetter = useSelector(
+  const data = useSelector(
       (state) => state.credential.certificateDetails
   );
+  const [covidLetter , setCovidLetter] = useState(data || {});
+  useEffect(()=>{
+    if(props.readFrom){
+      setCovidLetter(props.readFrom||{});
+    }
+  },[])
+  
   if(!covidLetter || Object.keys(covidLetter).length===0){
       return null;
   }
+
   return (
       <React.Fragment>
       <Card>
         <CardHeader 
-          title={<img src={Manipal} className={"medical-logo"} alt={covidLetter.ownerName}/>}
+          title={<img src={Manipal} className={"medical-logo"} alt={covidLetter.ownerName || "NA"}/>}
         />
         <CardContent className="degree-grid">
           <Grid
@@ -30,13 +39,13 @@ const Covid = (props) => {
           >
             <Grid item xs={12} md={12}>
                   <div className={"Covid-department-name"}>
-                      <b> {covidLetter.department} </b>
+                      <b> {covidLetter.department || "NA"} </b>
                   </div> 
              </Grid>
 
              <Grid item xs={12} md={12} >
                   <div className={"Covid-certificate-name"}>
-                      <b> {covidLetter.certificateName} </b>
+                      <b> {covidLetter.certificateName || "NA"} </b>
                   </div>
              </Grid>
               
@@ -50,10 +59,10 @@ const Covid = (props) => {
             style={{textAlign:"left"}}
           >
              <Grid item xs={12} md={12} className={"Covid-certificate-details"}>
-                 This is to certify that <b>{covidLetter.name}</b> <br/>
-                 Sex <b>{covidLetter.gender==="F" ? "female" : "male" }</b>, 
-                 Age <b>{covidLetter.age }yrs.</b>,
-                 Residing at <b>{covidLetter.remarks}</b> <br/>
+                 This is to certify that <b>{covidLetter.name || "NA"}</b> <br/>
+                 Sex <b>{covidLetter.gender ? covidLetter.gender==="F" ? "female" : "male" : "NA" }</b>, 
+                 Age <b>{covidLetter.age || "NA"}yrs.</b>,
+                 Residing at <b>{covidLetter.remarks || "NA"}</b> <br/>
                  is healthy and not suffering from COVID-19.
              </Grid>
              
@@ -74,10 +83,10 @@ const Covid = (props) => {
                           style={{textAlign:"left"}}
                       >
                           <Grid item xs={12} md={12}>
-                              Place: <b>{covidLetter.location}</b>
+                              Place: <b>{covidLetter.location || "NA"}</b>
                           </Grid>
                           <Grid item xs={12} md={12}>
-                              Date: <b>{covidLetter.issuedOn}</b>
+                              Date: <b>{covidLetter.issuedOn || "NA"}</b>
                           </Grid>
                       </Grid>
                   </Grid>
@@ -90,10 +99,10 @@ const Covid = (props) => {
                       style={{textAlign:"right"}}
                   >
                       <Grid item xs={12} md={12}>
-                          {covidLetter.issuedBy}
+                          {covidLetter.issuedBy || "NA"}
                       </Grid>
                       <Grid item xs={12} md={12}>
-                          {covidLetter.issuedByTeam}
+                          {covidLetter.issuedByTeam || "NA"}
                       </Grid>
                   </Grid>
               </Grid>
@@ -107,3 +116,6 @@ const Covid = (props) => {
 export default Covid;
 
 
+Covid.propTypes = {
+  readFrom: PropTypes.any,
+};

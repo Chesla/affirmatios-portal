@@ -62,11 +62,23 @@ const Login = (props) => {
     }
   };
   const login = () => {
-    if(!itemData.username || !itemData.password){
+    if(loginType!=="login"){
+      if(!itemData.username || !itemData.password || itemDataError.username || itemDataError.password
+        || !itemData.firstLastName || itemDataError.firstLastName){
+        let errorObj  = {
+            ...itemDataError,
+            username: !itemData.username || itemDataError.username ,
+            password: !itemData.password || itemDataError.password,
+            firstLastName: !itemData.firstLastName || itemDataError.firstLastName
+        }
+        setItemDataError(errorObj);
+      }
+    }
+    else if(!itemData.username || !itemData.password || itemDataError.username || itemDataError.password){
       let errorObj  = {
           ...itemDataError,
-          username: !itemData.username ,
-          password: !itemData.password,
+          username: !itemData.username || itemDataError.username ,
+          password: !itemData.password || itemDataError.password,
           firstLastName: !itemData.firstLastName
       }
       setItemDataError(errorObj);
@@ -100,11 +112,29 @@ const Login = (props) => {
       firstLastName: ""
     })
   },[props.location.pathname]);
+  const portalFor = () => {
+    let type = process.env.REACT_APP_AGENT?.toLowerCase();
+    switch(type){
+            case "medical" : return "Medical";
+            case "school" : return "School";
+            case "business" : return "Business";
+            default : return null;
+    }
+  }
   return (
     <div className="login-page">
       
       <div className="login-box">
-        <h1>AFFIRMATIO</h1>
+        <div>
+          <div>
+
+          </div>
+          <div>
+            <h1>AFFIRMATIO</h1>
+            {portalFor() ? <h2>{`for ${portalFor()}`}</h2> : null }
+          </div>
+        </div>
+        
         {showLoader ? (
           <div className={"loader-parent"}>
             <div className={"loader-container"}>

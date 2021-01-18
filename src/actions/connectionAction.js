@@ -30,7 +30,7 @@ export const getAllConnections = (data) => {
           verify:true
         },
         {
-          identity: "QWETVFFSD",
+          identity: "QWETVfFFSD",
           name:"Pratap",
           type:"people",
           verify:true
@@ -165,4 +165,42 @@ export const setConnectionMessage = (connectionVerified,errorMessage) => {
         errorMessage
       }
     };
+}
+
+export const sendConnectionRequest = () => {
+  return function (dispatch) {
+      dispatch({
+        type: Actions.SEND_CONNECTION_REQUEST,
+        payload: {
+            errorMessage:'',
+        }
+      })
+  }
+  // return async function (dispatch) {
+    //     const response = await fetch(url, {
+    //       method: "GET",
+    //       certificates: "include",
+    //     });
+    //     dispatch({
+    //       type: Actions.LOADER,
+    //       payload:false
+    //     })
+    //     if (response.status === 200) {
+    //         dispatch({
+    //             type: Actions.VERIFY_CONNECTION,
+    //             payload: {
+    //                 errorMessage:'',
+    //                 connections: data.connections
+    //             }
+    //         });
+    //     } else {
+    //         dispatch({
+    //             type:  Actions.VERIFY_CONNECTION,
+    //             payload: {
+    //               errorMessage:'Some error occured. Please try again later',
+    //               connections:[]
+    //             }
+    //         });
+    //     }
+    //   };
 }

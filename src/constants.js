@@ -61,7 +61,8 @@ export const theme = createMuiTheme({
       },
       MuiDialogContent: {
         root: {
-          paddingTop: "0px"
+          paddingTop: "0px",
+          textAlign:"center"
         }
       },
       MuiPaper: {
@@ -96,6 +97,24 @@ export const theme = createMuiTheme({
       MuiTypography: {
         colorPrimary: {
           color: "#017ACD",
+        }
+      },
+      MuiAppBar: {
+        colorDefault:{
+          backgroundColor: "#3a74bd",
+          color: "#fff"
+        },
+        colorPrimary:{
+          backgroundColor: "#369039",
+          color: "#fff"
+        },
+        colorSecondary:{
+          backgroundColor: "#c30246",
+          color: "#fff"
+        },
+        colorInherit:{
+          backgroundColor: "#8c8e25",
+          color: "#fff"
         }
       }
       

@@ -24,7 +24,11 @@
   font-size: calc(10px + 2vmin);
   color: white;
 }
-
+.app-header-text{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 .App-link {
   color: #61dafb;
 }
@@ -100,9 +104,11 @@ input:-webkit-autofill {
   padding-top: 70px;
 
 }
-h1{
+h1, h2{
   font-family: "Roboto";
   color: aliceblue;
+  margin: 2px;
+  padding: 2px;
 }
 
 .layout-card{
@@ -220,4 +226,8 @@ h1{
   margin: auto;
   /* height: 60vh; */
   overflow-y: auto;
+}
+
+.MuiDialog-paperWidthSm {
+  max-width: 720px !important;
 }

@@ -8,7 +8,13 @@ import {
     CardContent,
     Grid,
     CircularProgress,
-    Button
+    Button,
+    FormControl,
+    InputLabel,
+    Select,
+    MenuItem,
+    Checkbox,
+    ListItemText
 } from "@material-ui/core";
 import LocalHospitalIcon from '@material-ui/icons/LocalHospital';
 import SchoolIcon from '@material-ui/icons/School';
@@ -20,7 +26,8 @@ import {
 import {
     getAllConnections,
     verifyParticularConnection,
-    setConnectionMessage
+    setConnectionMessage,
+    sendConnectionRequest
 } from "../actions/connectionAction";
 const Connections = (props) => {
   const dispatch = useDispatch();
@@ -39,6 +46,10 @@ const Connections = (props) => {
   const connectionVerified = useSelector(
     (state) => state.connection.connectionVerified
   );
+  const [connectionsSelected, setSelectedConnections] = React.useState([]);
+  const setConnections = (event) => {
+      setSelectedConnections(event.target.value);
+  };
   const login = () => {
     const username = localStorage.getItem("username");
     const password = localStorage.getItem("password");
@@ -95,9 +106,14 @@ const Connections = (props) => {
       }
   }
   const showconnections = () => {
-    return (connections||[]).map((c)=>{
+    return (connections||[]).filter((c)=>{
+      if(connectionsSelected.length === 0){
+        return true;
+      }
+      return connectionsSelected.indexOf(c.name) !== -1
+    }).map((c)=>{
         return(
-            <Grid item xs={6} md={4} key={c.identity} >
+            <Grid item xs={6} md={4} key={c.identity} onClick={()=>props.history.push(`/requestCredentials/${c.identity}/${c.name}`)}>
                 <div className="certificate-container">
                 <Grid
                     container
@@ -142,6 +158,33 @@ const Connections = (props) => {
         )
     })
   }
+  const filterConnections = () => {
+    return (
+      <FormControl variant="outlined">
+          <InputLabel id="demo-simple-select-outlined-label">Search Connections</InputLabel>
+          <Select
+            labelId="demo-simple-select-outlined-label"
+            id="demo-simple-select-outlined"
+            value={connectionsSelected||[]}
+            multiple
+            onChange={setConnections}
+            renderValue={(selected) => selected.join(', ').toUpperCase()}
+            label="Search Connections"
+          >
+          {connections?.map((c) => (
+              <MenuItem key={c.identity} value={c.name}>
+                  <Checkbox color="primary" checked={connectionsSelected.indexOf(c.name) > -1} />
+                  <ListItemText primary={c.name.toUpperCase()} />
+              </MenuItem>
+          ))}
+          </Select>
+      </FormControl>
+    )
+  }
+  const sendConnection = () => {
+      dispatch(loader(true));
+      dispatch(sendConnectionRequest());
+  }
   return (
     <React.Fragment>
         {showLoader ? (
@@ -154,7 +197,29 @@ const Connections = (props) => {
         {connectionVerified && <Alert severity="success">Connection Verified Successfully</Alert>}
         {errorMessage && <Alert severity="error">{errorMessage}</Alert>}
         <Card className="layout-card">
-          <CardHeader title={"Connections"}/>
+          <CardHeader title={
+              <Grid
+                container
+                spacing={2}
+                alignItems={"center"}
+                justify="flex-start"
+              >
+              <Grid item xs ={12} md={6}>Connections</Grid>
+              <Grid item xs ={12} md={3}>
+                  <Button
+                      variant="contained"
+                      className="full-width"
+                      onClick={sendConnection}
+                  >
+                      CONNECT WITH CHESLA
+                  </Button>
+              </Grid>
+              {connections !== null || (connections||[]).length !== 0? 
+                <Grid item xs ={12} md={3} style={{textAlign:"right"}}> {filterConnections()}</Grid>
+                :null
+              }
+            </Grid>
+          }/>
           <CardContent className="certificate-grid">
           {connections === null || (connections||[]).length === 0? 
             <div>No connections Available.</div>
@@ -163,7 +228,7 @@ const Connections = (props) => {
               container
               spacing={2}
               alignItems={"center"}
-              justify="center"
+              justify="flex-start"
             >
                 {showconnections()}
             </Grid>

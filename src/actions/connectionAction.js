@@ -1,105 +1,47 @@
 import * as Actions from "../actions";
-export const getAllConnections = (data) => {
-  return function (dispatch) {
-    let url = `/api/getAllConnections/${data}`;
-    dispatch({
-      type: Actions.LOADER,
-      payload:false
-    })
-    let actionType = true;
-    let connections = [];
-    if(actionType){
-      let agentType = process.env.REACT_APP_AGENT?.toLowerCase();
-      if(agentType !== "people"){
-        connections = [{
-          identity: "QWETVFF",
-          name:"Chesla",
-          type:"people",
-          verify:true
-        },
-        {
-          identity: "QWETSFF",
-          name:"Shubh",
-          type:"people",
-          verify:false
-        },
-        {
-          identity: "QWETVFFSD",
-          name:"Arun",
-          type:"people",
-          verify:true
-        },
-        {
-          identity: "QWETVfFFSD",
-          name:"Pratap",
-          type:"people",
-          verify:true
-        }  ]
-      }else{
-        connections = [{
-          identity: "QWETVFF",
-          name:"Manipal Hospital",
-          type:"Medical",
-          verify:true
-        },
-        {
-          identity: "QWETSFF",
-          name:"KIIT University",
-          type:"School",
-          verify:false
-        },
-        {
-          identity: "QWETVFFSD",
-          name:"Tata Consultancy Services",
-          type:"Business",
-          verify:true
-        } ]
-      }
-      
+import {setCookie, getCookie} from "../constants";
+export const getAllConnections = () => {
+  return async function (dispatch) {
+    let url = process.env.REACT_APP_BASE_URL+"/connections";
+    const response = await fetch(url, {
+      method: "GET",
+    });
+    if (response.status === 200) {
+      const resp = response.json();
       dispatch({
-          type: Actions.GET_ALL_CONNECTIONS,
-          payload: {
-              errorMessage:'',
-              connections
-          }
-      });
-    }else{
-      dispatch({
-        type:  Actions.GET_ALL_CONNECTIONS,
-        payload: {
-          errorMessage:'Some error occured. Please try again later',
-          connections:[]
+        type: Actions.LOADER,
+        payload:false
+      })
+      resp.then((data) => {
+        if (response.status === 200) {
+          dispatch({
+            type: Actions.GET_ALL_CONNECTIONS,
+            payload: {
+                errorMessage:'',
+                connections: data.results || []
+            }
+          });
+        } else {
+          dispatch({
+            type:  Actions.GET_ALL_CONNECTIONS,
+            payload: {
+              errorMessage:'Some error occured. Please try again later',
+              connections:[]
+            }
+          });
         }
+      })
+      .catch(() => {
+        dispatch({
+          type:  Actions.GET_ALL_CONNECTIONS,
+          payload: {
+            errorMessage:'Some error occured. Please try again later',
+            connections:[]
+          }
+        });
       });
     }
-  }
-//   return async function (dispatch) {
-//     const response = await fetch(url, {
-//       method: "GET",
-//       certificates: "include",
-//     });
-//     dispatch({
-//       type: Actions.LOADER,
-//       payload:false
-//     })
-//     if (response.status === 200) {
-//         dispatch({
-//             type: Actions.GET_ALL_CONNECTIONS,
-//             payload: {
-//                 errorMessage:'',
-//                 connections: data.connections
-//             }
-//         });
-//     } else {
-//         dispatch({
-//             type:  Actions.GET_ALL_CONNECTIONS,
-//             payload: {
-//               errorMessage:'Some error occured. Please try again later',
-//               connections:[]
-//             }
-//         });
-//     }
-//   };
+  };
 }
 
 export const verifyParticularConnection = (data) => {
@@ -168,39 +110,67 @@ export const setConnectionMessage = (connectionVerified,errorMessage) => {
 }
 
 export const sendConnectionRequest = () => {
-  return function (dispatch) {
+  return async function (dispatch) {
+    let url = process.env.REACT_APP_BASE_URL+"/connections/request";
+    const response = await fetch(url, {
+      method: "POST",
+    });
+    if (response.status === 200) {
+      const resp = response.json();
       dispatch({
-        type: Actions.SEND_CONNECTION_REQUEST,
-        payload: {
-            errorMessage:'',
+        type: Actions.LOADER,
+        payload:false
+      })
+      resp.then((data) => {
+        if (response.status === 200) {
+          dispatch(getAllConnections());
+          let invitation = data.invitation;
+          for(let i in invitation){
+            if(typeof invitation[i] === "string"){
+              setCookie(i, invitation[i]);
+            }else{
+              setCookie(i, JSON.stringify(invitation[i]));
+            }
+          }
+          setCookie("alias", data.alias);
+          dispatch({
+            type: Actions.SEND_CONNECTION_REQUEST,
+            payload: {
+                errorMessage:'',
+                connectionSentSuccessfully:true,
+                connectionSent:data.invitation_url
+            }
+          });
+        } else {
+          dispatch({
+            type:  Actions.SEND_CONNECTION_REQUEST,
+            payload: {
+              errorMessage:'Some error occured. Please try again later',
+              connectionSentSuccessfully:false,
+              connectionSent:""
+            }
+          });
         }
       })
-  }
-  // return async function (dispatch) {
-    //     const response = await fetch(url, {
-    //       method: "GET",
-    //       certificates: "include",
-    //     });
-    //     dispatch({
-    //       type: Actions.LOADER,
-    //       payload:false
-    //     })
-    //     if (response.status === 200) {
-    //         dispatch({
-    //             type: Actions.VERIFY_CONNECTION,
-    //             payload: {
-    //                 errorMessage:'',
-    //                 connections: data.connections
-    //             }
-    //         });
-    //     } else {
-    //         dispatch({
-    //             type:  Actions.VERIFY_CONNECTION,
-    //             payload: {
-    //               errorMessage:'Some error occured. Please try again later',
-    //               connections:[]
-    //             }
-    //         });
-    //     }
-    //   };
+      .catch(() => {
+        dispatch({
+          type:  Actions.SEND_CONNECTION_REQUEST,
+          payload: {
+            errorMessage:'Some error occured. Please try again later',
+            connectionSentSuccessfully:false,
+            connectionSent:""
+          }
+        });
+      });
+    }
+  };
+}
+
+export const setConnectionSentSuccessfully = (connectionSentSuccessfully) => {
+  return {
+    type: Actions.SET_CONNECTION_SUCCESSFULLY,
+    payload:{
+      connectionSentSuccessfully
+    }
+  };
 }

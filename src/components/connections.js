@@ -1,5 +1,5 @@
 /* eslint-disable complexity */
-import React, { useEffect } from "react";
+import React, { useEffect, useState} from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { Alert } from "@material-ui/lab";
 import {
@@ -14,11 +14,22 @@ import {
     Select,
     MenuItem,
     Checkbox,
-    ListItemText
+    ListItemText,
+    Dialog,
+    DialogContent,
+    DialogContentText,
+    DialogActions,
+    InputAdornment,
+    IconButton,
+    OutlinedInput,
 } from "@material-ui/core";
 import LocalHospitalIcon from '@material-ui/icons/LocalHospital';
 import SchoolIcon from '@material-ui/icons/School';
+import PersonIcon from '@material-ui/icons/Person';
 import BusinessIcon from '@material-ui/icons/Business';
+import FileCopyIcon from '@material-ui/icons/FileCopy';
+import QRCODE from "../images/qrcode.png";
+
 import {
   loginUser,
   loader
@@ -27,8 +38,10 @@ import {
     getAllConnections,
     verifyParticularConnection,
     setConnectionMessage,
-    sendConnectionRequest
+    sendConnectionRequest,
+    setConnectionSentSuccessfully
 } from "../actions/connectionAction";
+import {getCookieValue,getType, setProfileName} from "../constants";
 const Connections = (props) => {
   const dispatch = useDispatch();
   const profileInfo = useSelector(
@@ -46,7 +59,15 @@ const Connections = (props) => {
   const connectionVerified = useSelector(
     (state) => state.connection.connectionVerified
   );
+  const connectionSentSuccessfully = useSelector(
+    (state) => state.connection.connectionSentSuccessfully
+  );
+  const connectionSent = useSelector(
+    (state) => state.connection.connectionSent
+  );
   const [connectionsSelected, setSelectedConnections] = React.useState([]);
+  const [successMessage, setSuccessmessage] = useState(false);
+
   const setConnections = (event) => {
       setSelectedConnections(event.target.value);
   };
@@ -63,20 +84,19 @@ const Connections = (props) => {
     }
   }
   const fetchAllConnections = () => {
-    let param = profileInfo.DID;
     dispatch(loader(true));
-    dispatch(getAllConnections(param));
+    dispatch(getAllConnections());
   }
-  const verifyConnection = (e) => {
-    let  connectionid = e.currentTarget.getAttribute("connectionid");
-    let param = {
-        DID: profileInfo.DID,
-        connectionid
-    }
-    console.log("verifyConnection",param);
-    dispatch(loader(true));
-    dispatch(verifyParticularConnection(param));
-  }
+  // const verifyConnection = (e) => {
+  //   let  connectionid = e.currentTarget.getAttribute("connectionid");
+  //   let param = {
+  //       DID: profileInfo.DID,
+  //       connectionid
+  //   }
+  //   console.log("verifyConnection",param);
+  //   dispatch(loader(true));
+  //   dispatch(verifyParticularConnection(param));
+  // }
   useEffect(()=>{
     if(Object.keys(profileInfo).length === 0){
         login();
@@ -102,18 +122,36 @@ const Connections = (props) => {
         case "medical" : return <LocalHospitalIcon style={{ fontSize: 50 }}/>
         case "school" : return <SchoolIcon style={{ fontSize: 50 }}/>
         case "business" : return <BusinessIcon style={{ fontSize: 50 }}/>
-        default : return null;
+        default : return <PersonIcon style={{fontSize:50}}/>;
       }
+  }
+  const copyToClipboard = () => {
+    let copyText = document.getElementById("Connection");
+    copyText.select();
+    copyText.setSelectionRange(0, 99999)
+    document.execCommand("copy");
+    setSuccessmessage("Copied to clipboard")
+    window.setTimeout(()=>{
+        setSuccessmessage("");
+    },2000);
   }
   const showconnections = () => {
     return (connections||[]).filter((c)=>{
       if(connectionsSelected.length === 0){
         return true;
       }
-      return connectionsSelected.indexOf(c.name) !== -1
+      return connectionsSelected.indexOf(c.connection_id) !== -1
     }).map((c)=>{
+      
+      let type = getType(c.their_label||"");
+      let name = setProfileName(type) || c.connection_id;
         return(
-            <Grid item xs={6} md={4} key={c.identity} onClick={()=>props.history.push(`/requestCredentials/${c.identity}/${c.name}`)}>
+            <Grid item xs={6} md={4} key={c.connection_id} 
+                  onClick={()=>{
+                    if(c.state!=="invitation"){
+                      props.history.push(`/requestCredentials/${c.connection_id}/${name}`)
+                    }
+                  }}>
                 <div className="certificate-container">
                 <Grid
                     container
@@ -122,33 +160,33 @@ const Connections = (props) => {
                     >
                     <Grid item xs={6} md={3}>
                         <div className="image-container">
-                            {setProfilePic(c.type)}
+                            {setProfilePic(type)}
                         </div>
                     </Grid>
                     <Grid item xs={6} md={9}>
                         <div className="certificate-issuer">
-                            {c.name}
+                            {name}
                         </div>
                     </Grid>
-                    {!c.verify ?
+                    {c.state==="invitation" ?
                         <Grid item xs={12} md={12}>
                             <Button
                                 variant="contained"
                                 className="full-width"
-                                onClick={verifyConnection}
-                                connectionid={c.identity}
+                                // onClick={verifyConnection}
+                                connectionid={c.connection_id}
                             >
-                                VERIFY
+                                PENDING
                             </Button>
                         </Grid>
-                    : 
+                        :
                         <Grid item xs={12} md={12}>
                             <Button
                                 variant="contained"
                                 className="full-width"
                                 className={"verified-button"}
                             >
-                                VERIFIED
+                                ACCEPTED
                             </Button>
                         </Grid> 
                     }
@@ -168,15 +206,20 @@ const Connections = (props) => {
             value={connectionsSelected||[]}
             multiple
             onChange={setConnections}
-            renderValue={(selected) => selected.join(', ').toUpperCase()}
+            renderValue={(selected) => selected.length +" selected."}
             label="Search Connections"
           >
-          {connections?.map((c) => (
-              <MenuItem key={c.identity} value={c.name}>
-                  <Checkbox color="primary" checked={connectionsSelected.indexOf(c.name) > -1} />
-                  <ListItemText primary={c.name.toUpperCase()} />
+          {connections?.map((c) => {
+            let type = getType(c.their_label||"");
+            let name = setProfileName(type) || c.connection_id;
+            return(
+              <MenuItem key={c.connection_id} value={c.connection_id}>
+                  <Checkbox color="primary" checked={connectionsSelected.indexOf(c.connection_id) > -1} />
+                  <ListItemText primary={`${name} (${c.connection_id.toUpperCase()})`} />
               </MenuItem>
-          ))}
+            )
+          }
+          )}
           </Select>
       </FormControl>
     )
@@ -185,6 +228,78 @@ const Connections = (props) => {
       dispatch(loader(true));
       dispatch(sendConnectionRequest());
   }
+  const acceptConnection = (nc) => {
+    console.log("acceptConnection",nc);
+  }
+  // const showNewconnections = () => {
+  //   let newConnections = {};
+  //   let agents = [];
+  //   if(process.env.REACT_APP_AGENT?.toLowerCase() === "people"){
+  //     agents = ["medical","business","school"];
+  //   }else if(process.env.REACT_APP_AGENT?.toLowerCase() === "medical"){
+  //     agents = ["people","business","school"];
+  //   }else if(process.env.REACT_APP_AGENT?.toLowerCase() === "business"){
+  //     agents = ["people","medical","school"];
+  //   }else if(process.env.REACT_APP_AGENT?.toLowerCase() === "school"){
+  //     agents = ["people","medical","business"];
+  //   }
+  //   for(let i=0; i<agents.length;i++){
+  //     let alias = getCookieValue(agents[i]+'alias');
+  //     if(alias){
+  //       let rk = getCookieValue(agents[i]+'recipientKeys');
+  //       newConnections[agents[i]]={
+  //         "@type": getCookieValue(agents[i]+'@type'),
+  //         "@id": getCookieValue(agents[i]+'@id'),
+  //         "label": getCookieValue(agents[i]+'label'),
+  //         "serviceEndpoint": getCookieValue(agents[i]+'serviceEndpoint'),
+  //         "recipientKeys":JSON.parse(rk)
+  //       }
+  //     }
+  //   }
+    
+  //   return Object.values(newConnections||{}).map((nc)=>{
+  //     let connectionLabel = nc.label;
+  //     let type = connectionLabel?.toLowerCase().includes("hospital")?"medical":
+  //     connectionLabel?.toLowerCase().includes("business")?"business":
+  //     connectionLabel?.toLowerCase().includes("business")?"school":
+  //     "people";
+  //     let connectionName = connectionLabel?.toLowerCase().includes("hospital")?"Manipal Hospital":
+  //     connectionLabel?.toLowerCase().includes("business")?"TCS":
+  //     connectionLabel?.toLowerCase().includes("business")?"KIIT Unviersity":
+  //     "Chesla"
+  //     return(
+  //       <Grid item xs={12} md={4}>
+  //         <div className="certificate-container">
+  //               <Grid
+  //                   container
+  //                   spacing={2}
+  //                   alignItems={"center"}
+  //                   >
+  //                   <Grid item xs={6} md={3}>
+  //                       <div className="image-container">
+  //                           {setProfilePic(type)}
+  //                       </div>
+  //                   </Grid>
+  //                   <Grid item xs={6} md={9}>
+  //                       <div className="certificate-issuer">
+  //                           {connectionName}
+  //                       </div>
+  //                   </Grid>
+  //                       <Grid item xs={12} md={12}>
+  //                           <Button
+  //                               variant="contained"
+  //                               className="full-width"
+  //                               onClick={()=>{acceptConnection(nc)}}
+  //                           >
+  //                               ACCEPT 
+  //                           </Button>
+  //                       </Grid>
+  //               </Grid>
+  //               </div>
+  //       </Grid>
+  //     )
+  //   })
+  // }
   return (
     <React.Fragment>
         {showLoader ? (
@@ -194,6 +309,7 @@ const Connections = (props) => {
             </div>
         </div>
         ) : null}
+        {connectionSentSuccessfully && <Alert severity="success">Connection Sent Successfully</Alert>}
         {connectionVerified && <Alert severity="success">Connection Verified Successfully</Alert>}
         {errorMessage && <Alert severity="error">{errorMessage}</Alert>}
         <Card className="layout-card">
@@ -206,13 +322,15 @@ const Connections = (props) => {
               >
               <Grid item xs ={12} md={6}>Connections</Grid>
               <Grid item xs ={12} md={3}>
+                {process.env.REACT_APP_AGENT?.toLowerCase() !== "people" &&
                   <Button
                       variant="contained"
                       className="full-width"
-                      onClick={sendConnection}
+                      onClick={()=>sendConnection()}
                   >
-                      CONNECT WITH CHESLA
+                      CONNECT
                   </Button>
+                }
               </Grid>
               {connections !== null || (connections||[]).length !== 0? 
                 <Grid item xs ={12} md={3} style={{textAlign:"right"}}> {filterConnections()}</Grid>
@@ -221,8 +339,18 @@ const Connections = (props) => {
             </Grid>
           }/>
           <CardContent className="certificate-grid">
+            {/* <Grid
+              container
+              spacing={2}
+              alignItems={"center"}
+              justify="flex-start"
+            >
+                {showNewconnections()}
+            </Grid> */}
           {connections === null || (connections||[]).length === 0? 
-            <div>No connections Available.</div>
+            <div>
+              No connections Available.
+            </div>
             :
             <Grid
               container
@@ -235,6 +363,62 @@ const Connections = (props) => {
           }
           </CardContent>
         </Card>
+        <Dialog
+            open={connectionSentSuccessfully||false}
+            onClose={() => dispatch(setConnectionSentSuccessfully(null))}
+            aria-labelledby="alert-dialog-title"
+            aria-describedby="alert-dialog-description"
+        >
+            <DialogContent>
+                <DialogContentText id="alert-dialog-description">
+                  <Grid
+                    container
+                    spacing={2}
+                    alignItems={"center"}
+                    justify="flex-start"
+                  >
+                    <Grid item xs ={12} md={12}>
+                        {successMessage && 
+                          <Alert severity="success">
+                            {successMessage}
+                          </Alert> 
+                        }
+                    </Grid>
+                    <Grid item xs ={12} md={12}>
+                        <img src={QRCODE}/>
+                    </Grid>
+                    <Grid item xs ={12} md={12}>
+                        <OutlinedInput
+                              label="Connection Url"
+                              id="Connection"
+                              name="Connection"
+                              value={connectionSent}
+                              variant="outlined"
+                              className="full-width"
+                              endAdornment={
+                                  <InputAdornment position="end">
+                                    <IconButton
+                                      aria-label="toggle password visibility"
+                                      onClick={copyToClipboard}
+                                    >
+                                      <FileCopyIcon />
+                                    </IconButton>
+                                  </InputAdornment>
+                              }
+                          />
+                    </Grid>
+                  </Grid>
+                </DialogContentText>
+            </DialogContent>
+            <DialogActions>
+                <Button variant="contained"
+                    onClick={() => {
+                      dispatch(setConnectionSentSuccessfully(false));
+                      }}>
+                    Close
+                </Button>
+            </DialogActions>
+        </Dialog>
     </React.Fragment>
   );
 };

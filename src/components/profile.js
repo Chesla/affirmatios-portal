@@ -20,7 +20,6 @@ import {
 } from "../actions/userAction";
 const Profile = (props) => {
   const dispatch = useDispatch();
-  // const roles = ["issuer", "holder", "verifier"];
   const profileInfo = useSelector(
     (state) => state.user.profileInfo
   );
@@ -63,6 +62,10 @@ const Profile = (props) => {
         default : return profileInfo.firstLastName;
       }
   }
+  console.log("profileInfo",profileInfo);
+  if(Object.keys(profileInfo).length==0){
+    return null;
+  }
   return (
     <React.Fragment>
       {showLoader ? (
@@ -95,7 +98,7 @@ const Profile = (props) => {
                             label="User Name"
                             id="username"
                             name="username"
-                            value={profileInfo.DID}
+                            defaultValue={profileInfo.DID}
                             InputProps={{
                                 readOnly: true,
                             }}
@@ -107,7 +110,7 @@ const Profile = (props) => {
                             label="Email Id"
                             id="email"
                             name="email"
-                            value={profileInfo.email}
+                            defaultValue={profileInfo.email}
                             InputProps={{
                                 readOnly: true,
                             }}
@@ -119,7 +122,7 @@ const Profile = (props) => {
                             label="Mobile Number"
                             id="mobile"
                             name="mobile"
-                            value={profileInfo.mobile}
+                            defaultValue={profileInfo.mobile}
                             InputProps={{
                                 readOnly: true,
                             }}
@@ -131,7 +134,7 @@ const Profile = (props) => {
                             label="Roles Assigned"
                             id="roles"
                             name="roles"
-                            value={(profileInfo.roles||[]).join(", ").toUpperCase()}
+                            defaultValue={(profileInfo.roles||[]).join(", ").toUpperCase()}
                             InputProps={{
                                 readOnly: true,
                             }}

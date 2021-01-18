@@ -60,9 +60,8 @@ const Certificate = (props) => {
         }
     }
     const fetchAllConnections = () => {
-        let param = profileInfo.DID;
         dispatch(loader(true));
-        dispatch(getAllConnections(param));
+        dispatch(getAllConnections());
     }
     const showConnections = () => {
         return (
@@ -78,10 +77,10 @@ const Certificate = (props) => {
                 }}
                 renderOption={(option) => (
                     <React.Fragment>
-                      {option.name} ({option.identity})
+                      {option.name} ({option.connection_id})
                     </React.Fragment>
                 )}
-                getOptionLabel={(option) => option.name||""}
+                getOptionLabel={(option) => option.name||option.connection_id}
                 id="controllable-connection"
                 options={connections||[]}
                 style={{ width: 300 }}

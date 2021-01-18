@@ -99,10 +99,10 @@ const Covid = (props) => {
                       style={{textAlign:"right"}}
                   >
                       <Grid item xs={12} md={12}>
-                          {covidLetter.issuedBy || "NA"}
+                          Ritu Kumar
                       </Grid>
                       <Grid item xs={12} md={12}>
-                          {covidLetter.issuedByTeam || "NA"}
+                          Medical Officer
                       </Grid>
                   </Grid>
               </Grid>

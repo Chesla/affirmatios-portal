@@ -48,7 +48,7 @@ const Credentials = (props) => {
   const fetchAllCredentials = () => {
     let param = profileInfo.DID;
     dispatch(loader(true));
-    dispatch(getAllCredentials(param));
+    dispatch(getAllCredentials());
   }
   useEffect(()=>{
     if(Object.keys(profileInfo).length === 0){

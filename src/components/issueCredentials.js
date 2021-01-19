@@ -91,7 +91,7 @@ const Certificate = (props) => {
                 }
                 getOptionLabel={(option) => {
                     let type = getType(option.their_label || "");
-                    let name = setProfileName(type) || option.connection_id;
+                    let name = setProfileName(type) || "";
                     return name || option.connection_id
                 }}
                 id="controllable-connection"
@@ -123,13 +123,17 @@ const Certificate = (props) => {
         let type = process.env.REACT_APP_AGENT?.toLowerCase();
         let nametype = getType(connectionName.their_label || "");
         let name = setProfileName(nametype) || connectionName.connection_id;
+        let param = {
+            connection_id: connectionName.connection_id
+        }
         switch(type){
                 case "medical" : return <CovidForm
                                             connectionName={name}
                                             profileName={profileInfo.firstLastName}
                                             submitCredentialForm={((credentialParam)=>{
                                                 dispatch(loader(true));
-                                                dispatch(issueCredential(credentialParam, "medical"))
+                                                param["credential"]=credentialParam;
+                                                dispatch(issueCredential(param, "medical"))
                                             })}/>;
                 case "school" : return <DegreeForm 
                                             connectionName={name}

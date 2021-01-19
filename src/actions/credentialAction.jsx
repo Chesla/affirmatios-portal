@@ -2,11 +2,11 @@ import * as Actions from "../actions";
 import {getType, setProfileName} from "../constants";
 export const getAllCredentials = () => {
   return async function (dispatch) {
-    let url = "http://localhost:8086/issue-credential/records";
+    let url = process.env.REACT_APP_BASE_URL+"/user/view";
     const response = await fetch(url, {
       method: "GET",
     });
-    let url1 = "http://localhost:8086/credentials";
+    let url1 = process.env.REACT_APP_BASE_URL+"/credentails"
     const response1 = await fetch(url1, {
       method: "GET",
     });
@@ -77,7 +77,6 @@ export const getAllCredentials = () => {
 export const acceptCredential = (credential_exchange_id) => {
   return async function (dispatch) {
     let url = process.env.REACT_APP_BASE_URL+"/user/store";
-    // let url = `http://localhost:8086/issue-credential/records/${credential_exchange_id}/store`;
     const response = await fetch(url, {
       method: "POST",
       body:JSON.stringify({exchange_id:credential_exchange_id})
@@ -123,7 +122,7 @@ export const acceptCredential = (credential_exchange_id) => {
 }
 export const getCertificateDetails = (param, certificateType) => {
   return async function (dispatch) {
-    let url = `http://localhost:8086/credential/${param.credentialId}`;
+    let url = process.env.REACT_APP_BASE_URL+`credentialsbyid?id=${param.credentialId}`;
     const response = await fetch(url, {
       method: "GET",
     });

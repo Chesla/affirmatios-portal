@@ -1,5 +1,4 @@
 import * as Actions from "../actions";
-import {setCookie, getCookie} from "../constants";
 export const getAllConnections = () => {
   return async function (dispatch) {
     let url = process.env.REACT_APP_BASE_URL+"/connections";
@@ -69,15 +68,15 @@ export const sendConnectionRequest = () => {
       resp.then((data) => {
         if (response.status === 200) {
           dispatch(getAllConnections());
-          let invitation = data.invitation;
-          for(let i in invitation){
-            if(typeof invitation[i] === "string"){
-              setCookie(i, invitation[i]);
-            }else{
-              setCookie(i, JSON.stringify(invitation[i]));
-            }
-          }
-          setCookie("alias", data.alias);
+          // let invitation = data.invitation;
+          // for(let i in invitation){
+          //   if(typeof invitation[i] === "string"){
+          //     setCookie(i, invitation[i]);
+          //   }else{
+          //     setCookie(i, JSON.stringify(invitation[i]));
+          //   }
+          // }
+          // setCookie("alias", data.alias);
           dispatch({
             type: Actions.SEND_CONNECTION_REQUEST,
             payload: {

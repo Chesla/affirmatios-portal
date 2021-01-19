@@ -1,7 +1,7 @@
 import * as Actions from ".";
 export const getAllNotifications = (data) => {
   return function (dispatch) {
-    let url = `/api/getAllNotifications/${data}`;
+    // let url = `/api/getAllNotifications/${data}`;
     dispatch({
       type: Actions.LOADER,
       payload:false
@@ -106,7 +106,7 @@ export const getAllNotifications = (data) => {
 }
 export const actionOnNotification = (type, data) => {
     return function (dispatch) {
-      let url = `/api/actionOnNotification/${type}/${data}`;
+      // let url = `/api/actionOnNotification/${type}/${data}`;
       let actionType = true;
       if(actionType){
         dispatch({

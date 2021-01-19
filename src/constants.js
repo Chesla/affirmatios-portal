@@ -138,50 +138,6 @@ export const theme = createMuiTheme({
     }
     return domain;
   }
-  export const setCookie = (key, value) => {
-    var d = new Date();
-    d.setTime(d.getTime() + 20* 24 * 60 * 60 * 1000);
-    var expires  = "expires=" + d.toUTCString();
-    document.cookie = process.env.REACT_APP_AGENT +
-        key +
-        "=" +
-        value +
-        ";" +
-        expires + 
-        getDomain() +
-        ";path=/;" +
-        isSecure();
-  }
-
-  export const getCookieValue = (key) => {
-          var name = key + "=";
-          var ca = document.cookie.split(";");
-          for (var i = 0; i < ca.length; i++) {
-              var c = ca[i];
-              while (c.charAt(0) == " ") {
-                  c = c.substring(1);
-              }
-              if (c.indexOf(name) == 0) {
-                  const value = c.substring(name.length, c.length);
-                  
-                  return value;
-              }
-          }
-          return "";
-  }
-
-  export const _removeCookie = (key) => {
-    const d = new Date();
-    d.setTime(d.getTime() - 24 * 60 * 60 * 1000);
-    const expires = "expires=" + d.toUTCString();
-    document.cookie =
-        key +
-        "=;" +
-        expires +
-        getDomain() +
-        ";path=/;" +
-        isSecure();
-}
 
 export const getType = (label) => {
   let type = "";

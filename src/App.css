@@ -132,7 +132,8 @@ h1, h2{
   border: 1px solid rgb(4, 31, 65);
   margin: 10px;
   padding: 10px;
-  height: 141px;
+  cursor: pointer;
+  height: 170px;
   width: 356px;
 }
 .certificate-issuer {

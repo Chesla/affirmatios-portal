@@ -1,10 +1,9 @@
 /* eslint-disable complexity */
 import React from "react";
 import { Link } from "react-router-dom";
-import { useSelector, useDispatch } from "react-redux";
 import { ThemeProvider } from "@material-ui/core/styles";
 import { theme } from "../constants";
-import { Typography, CssBaseline, Box, Container } from "@material-ui/core";
+import { Typography, CssBaseline } from "@material-ui/core";
 import IconButton from "@material-ui/core/IconButton";
 import AccountCircle from "@material-ui/icons/AccountCircle";
 import AppBar from "@material-ui/core/AppBar";

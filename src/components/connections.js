@@ -170,7 +170,6 @@ const Connections = (props) => {
                   <Grid item xs={12} md={12}>
                     <Button
                       variant="contained"
-                      className="full-width"
                       className={"verified-button"}
                     >
                       ACCEPTED

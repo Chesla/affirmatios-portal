@@ -140,14 +140,16 @@ const Certificate = (props) => {
                                             profileName={profileInfo.firstLastName}
                                             submitCredentialForm={((credentialParam)=>{
                                                 dispatch(loader(true));
-                                                dispatch(issueCredential(credentialParam, "school"))
+                                                param["credential"]=credentialParam;
+                                                dispatch(issueCredential(param, "school"))
                                             })}/>;
                 case "business" : return <ExperienceForm
                                             connectionName={name}
                                             profileName={profileInfo.firstLastName}
                                             submitCredentialForm={((credentialParam)=>{
                                                 dispatch(loader(true));
-                                                dispatch(issueCredential(credentialParam, "business"))
+                                                param["credential"]=credentialParam;
+                                                dispatch(issueCredential(param, "business"))
                                             })}/>;
                 default : return null;
         }

@@ -30,7 +30,7 @@ const Header = (props) => {
                                         <span>{setProfilePic()}</span> Medical
                                      </div>);
             case "school" : return (<div className={"app-header-text"}>
-                                        <span>{setProfilePic()}</span> School
+                                        <span>{setProfilePic()}</span> Univeristy
                                     </div>);
             case "business" : return (<div className={"app-header-text"}>
                                         <span>{setProfilePic()}</span> Business

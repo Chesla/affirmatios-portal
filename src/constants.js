@@ -189,6 +189,8 @@ export const getType = (label) => {
     type = "person";
   }else if(label && label.toLowerCase().includes("hospital")){
     type = "medical";
+  }else if(label && label.toLowerCase().includes("university")){
+    type = "school";
   }
   return type;
 }

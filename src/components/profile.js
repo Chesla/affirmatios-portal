@@ -47,9 +47,9 @@ const Profile = (props) => {
     let type = process.env.REACT_APP_AGENT?.toLowerCase();
       switch(type){
         case "people" : return <PersonIcon style={{ fontSize: 200 }}/>
-        case "medical" : return <img src={Manipal} width={230} height={160}/>
-        case "school" : return <img src={KIIT} width={230} height={160}/>
-        case "business" : return <img src={TCS} width={230} height={160}/>
+        case "medical" : return <img src={Manipal} width={230} height={160} alt="Manipal Hospitals"/>
+        case "school" : return <img src={KIIT} width={230} height={160} alt="KIIT University"/>
+        case "business" : return <img src={TCS} width={230} height={160} alt="TCS"/>
         default : return null;
       }
   }
@@ -62,8 +62,7 @@ const Profile = (props) => {
         default : return profileInfo.firstLastName;
       }
   }
-  console.log("profileInfo",profileInfo);
-  if(Object.keys(profileInfo).length==0){
+  if(Object.keys(profileInfo).length===0){
     return null;
   }
   return (

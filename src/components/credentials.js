@@ -88,7 +88,7 @@ const Credentials = (props) => {
   const showCertificates = () => {
     return (certificates||[]).map((c)=>{
         return(
-            <Grid item xs={6} md={4} key={c.id} style={{cursor:`${c.accept ? "pointer" : "none"}`}} 
+            <Grid item xs={6} md={4} key={c.id} style={{cursor:`${c.accept ? "pointer" : "auto"}`}} 
                   onClick={()=>{
                     if(c.accept){
                       window.open(`/credentails/${c.id}/${c.type}`,'_blank')}

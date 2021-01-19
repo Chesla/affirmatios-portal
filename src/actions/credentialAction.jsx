@@ -165,7 +165,7 @@ export const getCertificateDetails = (param, certificateType) => {
 }
 export const issueCredential = (param) => {
   return async function (dispatch) {
-    let url = process.env.REACT_APP_BASE_URL+"/hospital/issue";
+    let url = process.env.REACT_APP_BASE_URL+`/${process.env.REACT_APP_SCHEMA_AGENT}/issue`;
     const response = await fetch(url, {
       method: "POST",
       body:JSON.stringify(param)
@@ -259,7 +259,7 @@ const partialCredentialsData = (certificateType) => {
 }
 export const getAlreadyRequestedCertificateDetails = (param) => {
   return function (dispatch) {
-    let url = `/api/requestedCredential/${param}`;
+    // let url = `/api/requestedCredential/${param}`;
     dispatch({
       type: Actions.LOADER,
       payload:false

@@ -3,7 +3,6 @@ import {
   BrowserRouter as Router,
   Switch,
   Route,
-  Redirect,
 } from "react-router-dom";
 import thunk from "redux-thunk";
 import { createStore, applyMiddleware } from "redux";

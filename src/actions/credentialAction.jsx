@@ -225,41 +225,36 @@ const partialCredentialsData = (certificateType) => {
       designation: " Software Engineer",
       doj:" 06/16/2014",
       dol:" 09/11/2015",
-      issuedOn:" 09/14/2015",
-      ownerName: "TATA Consultancy Services",
-      certificateName: "SERVICE CERTIFICATE",
       type:certificateType,
       requestedOn: "10/10/2020"
     }
   }else if(certificateType?.toLowerCase() === "medical"){
     data = {
-      name: " Chesla",
-      designation: "",
-      department:" TO WHOMSOEVER IT MAY CONCERN",
-      issuedOn:" 12/14/2020",
-      reason:"Negative",
-      ownerName: "Manipal Hospital",
-      certificateName: "COVID CERTIFICATE",
-      type:certificateType,
-      requestedOn: "10/11/2020"
+      name:"Chesla Kar",
+      sex:"F",
+      age:"27",
+      address:"Bangalore, Karnataka",
+      place:"Bangalore",
+      date:"12th Nov 2020",
+      type:"medical",
+      requestedOn: "12/12/2020"
     }
   } else {
     data = {
-      name: " Chesla Kar",
-      department:"B.TECH in Computer Science & Engineering",
-      dol:" month of May, 2014 ",
-      issuedOn:" 26th May 2014",
-      ownerName: "KIIT UNIVERSITY",
-      certificateName: "PROVISIONAL CERTIFICATE",
-      type:certificateType,
-      requestedOn: "11/11/2020"
+      department:"Computer Science Engineering",
+      name:"Chesla Kar",
+      roll_number:"1005042",
+      completed_date:"month of May 2014",
+      address:"Bhubaneswar",
+      issued_date:"26th May 2014",
+      type:"school",
+      requestedOn: "10/12/2020"
     }
   }
   return data;
 }
 export const getAlreadyRequestedCertificateDetails = (param) => {
   return function (dispatch) {
-    // let url = `/api/requestedCredential/${param}`;
     dispatch({
       type: Actions.LOADER,
       payload:false
@@ -269,7 +264,7 @@ export const getAlreadyRequestedCertificateDetails = (param) => {
         dispatch({
           type:  Actions.CREDENTIALS_ALREADY_REQUESTED,
           payload:{
-            certificateAlreadyRequested:[partialCredentialsData("business"),partialCredentialsData("medical")],
+            certificateAlreadyRequested:[partialCredentialsData("business"),partialCredentialsData("medical"),partialCredentialsData("school")],
             errorMessage:""
           }
         })
@@ -288,5 +283,42 @@ export const getAlreadyRequestedCertificateDetails = (param) => {
 }
 
 export const requestCredentials = (param) => {
-
+  return function (dispatch) {
+    dispatch({
+      type: Actions.LOADER,
+      payload:false
+    })
+    let actionType = true;
+    if(actionType){
+        dispatch({
+          type:  Actions.CREDENTIALS_REQUESTED,
+          payload:{
+            credentialRequested:param,
+            successRequestMessage:true,
+            errorMessage:""
+          }
+        })
+        window.setTimeout(()=>{
+          dispatch({
+            type:  Actions.CREDENTIALS_REQUESTED,
+            payload:{
+              credentialRequested:param,
+              successRequestMessage:false,
+              errorMessage:""
+            }
+          })
+        },1000)
+    }else{
+      if(actionType){
+        dispatch({
+          type:  Actions.CREDENTIALS_REQUESTED,
+          payload:{
+            credentialRequested: [],
+            successRequestMessage:false,
+            errorMessage:"Some error occured. Please try again later",
+          }
+        })
+      }
+    }
+  }
 }

@@ -27,7 +27,9 @@ const Experience = (props) => {
             setExperienceLetter(data);
         }
       },[data]);
-    console.log("experienceLetter",experienceLetter,props.readFrom);
+    if(!experienceLetter || Object.keys(experienceLetter).length===0 && props.readFrom){
+        return <div>No Data has been requested</div>;
+    }
     if(!experienceLetter || Object.keys(experienceLetter).length===0){
         return null;
     }
@@ -36,7 +38,7 @@ const Experience = (props) => {
         <React.Fragment>
         <Card>
           <CardHeader 
-            title={<img src={TCS} className={"office-logo"} alt={experienceLetter.ownerName || "NA"}/>}/>
+            title={<img src={TCS} className={"office-logo"} alt={"TCS"}/>}/>
           <CardContent className="degree-grid">
             <Grid
               container
@@ -57,7 +59,7 @@ const Experience = (props) => {
             >
                <Grid item xs={12} md={12}>
                     <div className={"degree-certificate-name"}>
-                        <b> {experienceLetter.certificateName || "NA"} </b>
+                        <b> {"SERVICE CERTIFICATE"} </b>
                     </div>
                </Grid>
             </Grid>
@@ -188,10 +190,10 @@ const Experience = (props) => {
               style={{textAlign:"right"}}
             >
                <Grid item xs={12} md={12}>
-                {experienceLetter.issuedBy || "NA"}
+                {"Ritu Kumar"}
                </Grid>
                <Grid item xs={12} md={12}>
-                  {experienceLetter.issuedByTeam || "NA"}
+                  {"Recruitment Head"}
                </Grid>
             </Grid>
           </CardContent>

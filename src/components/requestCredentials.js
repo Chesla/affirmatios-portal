@@ -48,6 +48,9 @@ const RequestCredentials = (props) => {
         dispatch(loader(true));
         dispatch(getAlreadyRequestedCertificateDetails(param));
     }
+    const credentialRequested = useSelector(
+        (state) => state.credential.credentialRequested
+    )
     const login = () => {
         const username = localStorage.getItem("username");
         const password = localStorage.getItem("password");
@@ -100,12 +103,39 @@ const RequestCredentials = (props) => {
           default : return null;
         }
     }
+    const setCredentialData = (type) =>{
+        let credential  = credentialRequested["people"] || [];
+        let obj = {};
+        let certificateType ;
+        if(type === "medical"){
+            certificateType = "medical"
+        }else if(type === "business"){
+            certificateType = "experience"
+        }else{
+            certificateType = "degree"
+        }
+        for(let i=0;i<credential.length;i++){
+            if(Object.keys(credential[i])[0] === certificateType){
+                for(let j=0; j<Object.values(credential[i])[0].params.length;j++){
+                    let param = Object.values(credential[i])[0].params[j];
+                    if(credential[i][certificateType]){
+                        for(let k=0 ;k<certificateAlreadyRequested?.length ;k++){
+                            if(certificateAlreadyRequested[k].type === type){
+                                obj[param] = certificateAlreadyRequested[k][param];
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        setCredentialDataByAgent({[type]:obj});
+    }
     const showCredentials = () => {
         return (certificateAlreadyRequested||[]).map((c,index)=>{
             return(
                 <Grid item xs={6} md={4} key={index} 
                         onClick={()=>{
-                          setCredentialDataByAgent({[c.type]:c});
+                          setCredentialData(c.type);
                           setShowCredentialDialog(true);
                           setFetchedCertificateType(c.type);
                         }
@@ -139,7 +169,7 @@ const RequestCredentials = (props) => {
                                 </Grid>
                                 <Grid item xs={12} md={12}>
                                     <div className="certificate-issued-on">
-                                        {`Issued on: ${c.requestedOn}`} <div>(MM/DD/YYYY)</div>
+                                        {`Requested on: ${c.requestedOn}`} <div>(MM/DD/YYYY)</div>
                                     </div>
                                 </Grid>
                             </Grid>
@@ -153,10 +183,11 @@ const RequestCredentials = (props) => {
     return (
       <React.Fragment>
         {errorMessage && <Alert severity="error">{errorMessage}</Alert>}
+        
             <Card className="layout-card">
                 <CardHeader title={` Details of ${props.match.params.name?.toUpperCase()}`}/>
                 <CardContent className="certificate-grid">
-                {certificateAlreadyRequested === null || certificateAlreadyRequested.length === 0? 
+                {certificateAlreadyRequested === null || certificateAlreadyRequested?.length === 0? 
                     <div>No Credentials Available.</div>
                     :
                     <Grid

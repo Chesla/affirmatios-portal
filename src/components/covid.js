@@ -26,7 +26,9 @@ const Covid = (props) => {
         setCovidLetter(data);
     }
   },[data]);
-  console.log("covidLetter",data,covidLetter);
+  if(!covidLetter || Object.keys(covidLetter).length===0 && props.readFrom){
+    return <div>No Data has been requested</div>;
+  }
   if(!covidLetter || Object.keys(covidLetter).length===0){
       return null;
   }

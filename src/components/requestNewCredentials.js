@@ -24,6 +24,7 @@ import {
 import {
     getAllConnections
 } from "../actions/connectionAction";
+import { getType, setProfileName } from "../constants";
 const RequestNewCredentails = (props) => {
     const dispatch = useDispatch();
     const profileInfo = useSelector(
@@ -34,6 +35,12 @@ const RequestNewCredentails = (props) => {
     );
     const connections = useSelector(
         (state) => state.connection.connections
+    );
+    const credentialRequested = useSelector(
+        (state) => state.credential.credentialRequested
+    );
+    const successRequestMessage = useSelector(
+        (state) => state.credential.successRequestMessage
     );
     const [connectionName, setConnectionName] = useState("");
     const [connectionInputValue, setConnectionInputValue] = useState("");
@@ -57,44 +64,35 @@ const RequestNewCredentails = (props) => {
     const credentails = {
         "degree" : {
             params:[
-                {id : "companyName", name : "College Name"}, 
                 {id : "name", name : " Name"},
-                {id : "registartionNo", name : " Registartion Number"}, 
-                {id :"dol" , name : "Date of Completion"},
+                {id : "roll_number", name : " Registartion Number"}, 
+                {id :"completed_date" , name : "Date of Completion"},
                 {id :"department", name : "Department"},
-                {id :"location" , name : "Location where issued"},
-                {id :"issuedOn", name : "Issued On"},
-                {id :"issuedBy", name : "Issued By"},
-                {id : "issuedByTeam", name : "Issued By Team"}
+                {id :"address" , name : "Location where issued"},
+                {id :"issued_date", name : "Issued On"}
             ]
         },
         "experience":{
             params:[
-                {id :"companyName" , name : "Company Name"}, 
                 {id :"name" , name : "Name"},
                 {id :"gender" , name : "Gender"},
                 {id :"designation" , name : "Designation"},
                 {id :"department" , name : "Department"},
-                {id :"doj" , name : "Date of Joining"},
-                {id :"dol" , name : "Date of Leaving"},
+                {id :"doj" , name : "Joining Date"},
+                {id :"dol" , name : "Release Date"},
                 {id :"reason" , name : "Reason"},
                 {id :"remarks" , name : "Remarks"},
-                {id :"issuedOn" , name : "Issued On"},
-                {id :"issuedBy" , name : "Issued By"},
-                {id :"issuedByTeam" , name : "Issued By Team"}
+                {id :"issuedOn" , name : "Issued On"}
             ]
         },
         "medical":{
             params:[
-                {id :"companyName" , name: "Hospital Name"}, 
                 {id :"name" , name: "Name"},
-                {id :"gender" , name: "Gender"},
+                {id :"sex" , name: "Sex"},
                 {id :"age" , name: "Age"},
                 {id :"address" , name: "Address"},
-                {id :"location"  , name: "Location where issued"},
-                {id :"issuedOn" , name: "Issued On"},
-                {id :"issuedBy" , name: "Issued By"},
-                {id :"issuedByTeam" , name: "Issued By Team"}
+                {id :"place"  , name: "Place where issued"},
+                {id :"date" , name: "Issued On"}
             ]
         },
     }
@@ -104,6 +102,7 @@ const RequestNewCredentails = (props) => {
         dispatch(getAllConnections(param));
     }
     const showConnections = () => {
+        
         return (
             <Autocomplete
                 value={connectionName}
@@ -112,18 +111,28 @@ const RequestNewCredentails = (props) => {
                 }}
                 inputValue={connectionInputValue}
                 onInputChange={(event, connectionInputValue) => {
+                    
                     setConnectionInputValue(connectionInputValue);
                 }}
-                renderOption={(option) => (
-                    <React.Fragment>
-                      {option.name} ({option.identity})
-                    </React.Fragment>
-                )}
-                getOptionLabel={(option) => option.name||""}
+                renderOption={(option) => {
+                    let type = getType(option.their_label || "");
+                    let name = setProfileName(type) || option.connection_id;
+                    return (
+                        <React.Fragment>
+                            {name} ({option.connection_id})
+                        </React.Fragment>
+                    )
+                }
+                }
+                getOptionLabel={(option) => {
+                    let type = getType(option.their_label || "");
+                    let name = setProfileName(type) || "";
+                    return name ? name : option.connection_id
+                }}
                 id="controllable-connection"
-                options={connections||[]}
-                style={{ width: '100%' }}
-                renderInput={(params) => <TextField {...params} label="Connection" variant="outlined" />}
+                options={connections.filter((c)=> c.state === "active")||[]}
+                style={{ width: 300 }}
+                renderInput={(params) => <TextField {...params} label="Connection Name" variant="outlined" />}
             />
         )
     }
@@ -133,12 +142,15 @@ const RequestNewCredentails = (props) => {
                 <FormControl variant="outlined">
                     <InputLabel id="certificate-simple-select-outlined-label">Certificate Type</InputLabel>
                     <Select
-                    labelId="certificate-simple-select-outlined-label"
-                    id="certificate"
-                    name="certificate"
-                    value={certificateType||""}
-                    onChange={(e)=>saveCertificateType(e.target.value)}
-                    label="Certificate Type"
+                        labelId="certificate-simple-select-outlined-label"
+                        id="certificate"
+                        name="certificate"
+                        value={certificateType||""}
+                        onChange={(e)=>{
+                            setSelectedParams([]);
+                            saveCertificateType(e.target.value)
+                        }}
+                        label="Certificate Type"
                     >
                         <MenuItem value={"degree"}>
                                 {"Provisional Certificate"}
@@ -179,16 +191,50 @@ const RequestNewCredentails = (props) => {
     }
     const requestParams = () => {
         if(paramsSelected.length && !!certificateType && !!connectionName){
-            let param = {
-                did: connectionName.identity,
-                certificateType:certificateType,
-                paramsSelected:paramsSelected
+            let certificate = certificateType; 
+            let credentialRequestedParam = credentialRequested || {};
+            let id = connectionName.connection_id;
+            id="people";
+            if(credentialRequestedParam){
+                if(credentialRequestedParam[id]){
+                    let check = false;
+                    for(let i=0; i<credentialRequestedParam[id].length; i++){
+                        const identity = credentialRequestedParam[id][i];
+                        if(identity.certificateType === certificate){
+                            check = true;
+                            identity.params = paramsSelected;
+                            credentialRequestedParam[id][i] = identity
+                        }
+                    }   
+                    if(!check){
+                        credentialRequestedParam[id].push({[certificate]:{
+                            certificateType:certificate,
+                            params:paramsSelected
+                        }});
+                    }
+                }else{
+                    credentialRequestedParam = {};
+                    credentialRequestedParam[id]=[
+                        {[certificateType]:{
+                            certificateType:certificate,
+                            params:paramsSelected
+                        }}
+                    ]
+                }
             }
-            dispatch(requestCredentials(param));
+            else{
+                credentialRequestedParam[id]=[
+                    {[certificateType]:{
+                        certificateType:certificate,
+                        params:paramsSelected
+                    }}
+                ]
+            }
+            console.log("people",credentialRequestedParam);
+            dispatch(requestCredentials(credentialRequestedParam));
         }
     }
     const checkRequest = () => {
-        console.log(paramsSelected,certificateType,connectionName);
         if(paramsSelected.length && !!certificateType && !!connectionName){
             return false
         }else{
@@ -212,6 +258,7 @@ const RequestNewCredentails = (props) => {
     return (
       <div className="degree-grid-form">
         {errorMessage && <Alert severity="error">{errorMessage}</Alert>}
+        {successRequestMessage && <Alert severity="success">{"Request sent successfully"}</Alert>}
         <Card className={"mgTop10"}>
           <CardHeader className={"mgleft10"} title={"Request Credentials"}/>
           <CardContent>

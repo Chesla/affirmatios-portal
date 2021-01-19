@@ -141,7 +141,7 @@ const Connections = (props) => {
             md={4}
             key={c.connection_id}
             onClick={() => {
-              if (c.state !== "invitation") {
+              if (c.state !== "invitation" && process.env.REACT_APP_AGENT !== "people") {
                 props.history.push(
                   `/requestCredentials/${c.connection_id}/${name}`
                 );

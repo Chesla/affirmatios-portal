@@ -74,14 +74,12 @@ const Notifications = (props) => {
       }
   }
   const notificationAction = (e) => {
-        let actionType = e.currentTarget.name;
         let  notificationid = e.currentTarget.getAttribute("notificationid")
-        let param = {
-            DID: profileInfo.DID,
-            notificationid
-        }
+        let modifiedNotification = notifications.filter((f)=>{
+          return f.requesterId !== notificationid
+        })
         dispatch(loader(true));
-        dispatch(actionOnNotification(actionType, param));
+        dispatch(actionOnNotification(modifiedNotification));
   }
   const showNotifications = () => {
     return (notifications||[]).map((n)=>{

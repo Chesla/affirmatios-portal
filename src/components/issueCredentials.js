@@ -71,7 +71,6 @@ const Certificate = (props) => {
             <Autocomplete
                 value={connectionName}
                 onChange={(event, newValue) => {
-                    console.log("newValue",newValue);
                     setConnectionName(newValue);
                 }}
                 inputValue={connectionInputValue}
@@ -92,7 +91,7 @@ const Certificate = (props) => {
                 getOptionLabel={(option) => {
                     let type = getType(option.their_label || "");
                     let name = setProfileName(type) || "";
-                    return name || option.connection_id
+                    return name ? name : option.connection_id
                 }}
                 id="controllable-connection"
                 options={connections.filter((c)=> c.state === "active")||[]}

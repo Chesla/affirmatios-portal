@@ -27,8 +27,11 @@ const Degree = (props) => {
             setDegreeLetter(data);
         }
       },[data]);
+    if(!degreeLetter || Object.keys(degreeLetter).length===0 && props.readFrom){
+        return <div>No Data has been requested</div>;
+    }
     if(!degreeLetter || Object.keys(degreeLetter).length===0){
-        return null;
+        return null ;
     }
     return (
 

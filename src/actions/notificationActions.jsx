@@ -8,49 +8,20 @@ export const getAllNotifications = (data) => {
     })
     let actionType = true;
     if(actionType){
-      let notifications = [{
-            requestedData: {
-                message: "Requesting for name.",
-                param:["aadharNo"]
-            },
-            requesterId:"123",
-            requesterName:"Manipal Hospital",
-            requestedTime:"12/10/2020 10:10:00",
-            requesterType:"Medical",
+      let notifications = [
+        {
+          requestedData: {
+              message: "Requesting for details of Joining date, Release date, Designation from previous company SERVICE CERTIFICATE.",
+              param:["joiningDate, releaseDate, designation"]
+          },
+          requesterId:"123456",
+          requesterName:"Walmart",
+          requestedTime:"10/15/2015 15:00:00",
+          requesterType:"Business",
         },
         {
             requestedData: {
-                message: "Requesting for aadhar number.",
-                param:["aadharNo"]
-            },
-            requesterId:"1234",
-            requesterName:"Manipal Hospital",
-            requestedTime:"12/10/2020 10:10:00",
-            requesterType:"Medical",
-        },
-        {
-            requestedData: {
-                message: "Requesting for registration number.",
-                param:["registrationNo"]
-            },
-            requesterId:"12345",
-            requesterName:"KIIT University",
-            requestedTime:"05/10/2014 12:00:00",
-            requesterType:"School",
-        },
-        {
-            requestedData: {
-                message: "Requesting for employee id.",
-                param:["employeeId"]
-            },
-            requesterId:"123456",
-            requesterName:"Tata Consultancy Services",
-            requestedTime:"10/15/2015 15:00:00",
-            requesterType:"Business",
-        },
-        {
-            requestedData: {
-                message: "Requesting for details of Joining date, Release date, Designation from previous company experience letter.",
+                message: "Requesting for details of Name, Age and Location from COVID CERTIFICATE.",
                 param:["joiningDate, releaseDate, designation"]
             },
             requesterId:"1234567",
@@ -58,6 +29,16 @@ export const getAllNotifications = (data) => {
             requestedTime:"10/15/2015 15:00:00",
             requesterType:"Business",
         },
+        {
+          requestedData: {
+              message: "Requesting for details of  Name, Department, Date of Completion and location from DEGREE CERTIFICATE.",
+              param:["joiningDate, releaseDate, designation"]
+          },
+          requesterId:"12345678",
+          requesterName:"Walmart",
+          requestedTime:"10/15/2015 15:00:00",
+          requesterType:"Business",
+      },
      ]
       dispatch({
           type: Actions.GET_ALL_NOTIFICATIONS,
@@ -104,19 +85,23 @@ export const getAllNotifications = (data) => {
 //     }
 //   };
 }
-export const actionOnNotification = (type, data) => {
+export const actionOnNotification = (modifiedNotification) => {
     return function (dispatch) {
       // let url = `/api/actionOnNotification/${type}/${data}`;
+      dispatch({
+        type: Actions.LOADER,
+        payload:false
+      })
       let actionType = true;
       if(actionType){
         dispatch({
-            type: Actions.NOTIFICATION_ACTION,
-            payload: {
-                errorMessage:'',
-                notificationAction:true
-            }
+          type: Actions.GET_ALL_NOTIFICATIONS,
+          payload: {
+              errorMessage:'',
+              notifications:modifiedNotification
+          }
         });
-        dispatch(getAllNotifications(data.DID));
+        // dispatch(getAllNotifications(data.DID));
       }else{
         dispatch({
           type:  Actions.NOTIFICATION_ACTION,

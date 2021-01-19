@@ -2,7 +2,7 @@ import * as Actions from "../actions";
 import {getType, setProfileName} from "../constants";
 export const getAllCredentials = () => {
   return async function (dispatch) {
-    let url = process.env.REACT_APP_BASE_URL+"/issue-credential/records";
+    let url = process.env.REACT_APP_BASE_URL+"/hospital/view";
     const response = await fetch(url, {
       method: "GET",
     });
@@ -23,12 +23,13 @@ export const getAllCredentials = () => {
               certificate["type"] = type;
               certificate["date"] = r.updated_at;
               certificate["name"] = name;
+              certificate["accept"] = false;
+              certificate["id"] = r.credential_proposal_dict.cred_def_id;
               certificate["credential_exchange_id"] = r.credential_exchange_id;
               certificateDetails = r.credential_proposal_dict.credential_proposal.attributes;
               certificate["certificateDetails"] = certificateDetails;
               return certificate;
           })
-          console.log("certificates",certificates);
           dispatch({
             type: Actions.GET_ALL_CREDENTIALS,
             payload: {

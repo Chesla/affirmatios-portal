@@ -1,3 +1,4 @@
+To get started with the project 
 Create an env file to run the code
 SET two varibales REACT_APP_AGENT and REACT_APP_SCHEMA_AGENT and REACT_APP_BASE_URL
 

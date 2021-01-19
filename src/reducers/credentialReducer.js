@@ -7,7 +7,8 @@ const INITIAL_STATE = {
     errorMessage:"",
     credentialIssued:null,
     credentialIssuedAlready:null,
-    certificateAlreadyRequested:[]
+    certificateAlreadyRequested:[],
+    credentialAccepted:null
 };
 const credentialReducer = (state = INITIAL_STATE, action) => {
     switch (action.type) {
@@ -57,6 +58,14 @@ const credentialReducer = (state = INITIAL_STATE, action) => {
             return {
                 errorMessage:"",
                 certificateDetails:{},
+            }
+        }
+        case Actions.ACCEPT_CREDENTIALS  :{
+            const {payload} = action;
+            return {
+                ...state,
+                errorMessage:payload.errorMessage|| "",
+                credentialAccepted:payload.credentialAccepted|| false,
             }
         }
         default : {

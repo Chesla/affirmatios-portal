@@ -6,18 +6,45 @@ export const getAllCredentials = () => {
     const response = await fetch(url, {
       method: "GET",
     });
-    if (response.status === 200) {
+    let url1 = "http://localhost:8086/credentials";
+    const response1 = await fetch(url1, {
+      method: "GET",
+    });
+    
+    if (response.status === 200 || response1.status === 200) {
       const resp = response.json();
+      const resp1 = response1.json();
       dispatch({
         type: Actions.LOADER,
         payload:false
       })
+      let certificates = [];
+      let acceptedCertificate = [];
+      let nonAcceptedCertificates = [];
       window.scroll(0, 0);
+      Promise.all([resp, resp1]).then(values => {
+        console.log("values",values);
+      });
+      resp1.then((data)=> {
+        if(response1.status === 200) {
+          let certificate = {};
+          acceptedCertificate = data.results.map((r)=>{
+            let type = getType(r.schema_id || "");
+            let name = setProfileName(type);
+            certificate["type"] = type;
+            certificate["date"] = new Date();
+            certificate["name"] = name;
+            certificate["accept"] = true;
+            certificate["id"] = r.cred_def_id;
+            certificate["certificateDetails"] = r.attrs;
+          })
+        }
+      })
       resp.then((data) => {
         if (response.status === 200) {
           let certificate = {};
           let certificateDetails = {};
-          let certificates = data.results.map((r)=>{
+          nonAcceptedCertificates = data.results.map((r)=>{
               let type = getType(r.schema_id || "");
               let name = setProfileName(type);
               certificate["type"] = type;
@@ -34,7 +61,7 @@ export const getAllCredentials = () => {
             type: Actions.GET_ALL_CREDENTIALS,
             payload: {
                 errorMessage:'',
-                certificates
+                certificates:[...nonAcceptedCertificates, ...acceptedCertificate]
             }
           });
         } else {
@@ -58,79 +85,51 @@ export const getAllCredentials = () => {
       });
     }
   };
-//   return function (dispatch) {
-//     let url = process.env.REACT_APP_BASE_URL+"/issue-credential/records";
-//     dispatch({
-//       type: Actions.LOADER,
-//       payload:false
-//     })
-//     let actionType = true;
-//     if(actionType){
-//       let certificates = [{
-//         identity: "QWETVFF",
-//         id:"Manipal-1",
-//         name:"Manipal Hospital",
-//         date:"12/10/2020",
-//         type:"Medical",
-//       },
-//       {
-//         identity: "QWETVFF",
-//         id:"KIIT-1",
-//         name:"KIIT University",
-//         date:"05/10/2014",
-//         type:"School",
-//       },
-//       {
-//         identity: "QWETVFF",
-//         id:"TCS-1",
-//         name:"Tata Consultancy Services",
-//         date:"10/15/2015",
-//         type:"Business",
-//       } ]
-//       dispatch({
-//           type: Actions.GET_ALL_CREDENTIALS,
-//           payload: {
-//               errorMessage:'',
-//               certificates
-//           }
-//       });
-//     }else{
-//       dispatch({
-//         type:  Actions.GET_ALL_CREDENTIALS,
-//         payload: {
-//           errorMessage:'Some error occured. Please try again later',
-//           certificates:[]
-//         }
-//       });
-//     }
-//   }
-// //   return async function (dispatch) {
-// //     const response = await fetch(url, {
-// //       method: "GET",
-// //       certificates: "include",
-// //     });
-// //     dispatch({
-// //       type: Actions.LOADER,
-// //       payload:false
-// //     })
-// //     if (response.status === 200) {
-// //         dispatch({
-// //             type: Actions.GET_ALL_CREDENTIALS,
-// //             payload: {
-// //                 errorMessage:'',
-// //                 certificates: data.certificates
-// //             }
-// //         });
-// //     } else {
-// //         dispatch({
-// //             type:  Actions.GET_ALL_CREDENTIALS,
-// //             payload: {
-// //               errorMessage:'Some error occured. Please try again later',
-// //               certificates:[]
-// //             }
-// //         });
-// //     }
-// //   };
+}
+export const acceptCredential = (credential_exchange_id) => {
+  return async function (dispatch) {
+    let url = `http://localhost:8086/issue-credential/records/${credential_exchange_id}/store`;
+    const response = await fetch(url, {
+      method: "GET",
+    });
+    if (response.status === 200) {
+      const resp = response.json();
+      dispatch({
+        type: Actions.LOADER,
+        payload:false
+      })
+      window.scroll(0, 0);
+      resp.then((data) => {
+        if (response.status === 200) {
+          console.log("data");
+          dispatch({
+            type:  Actions.ACCEPT_CREDENTIALS,
+            payload: {
+              credentialAccepted:true,
+              errorMessage:""
+            }
+          });
+        } else {
+          dispatch({
+            type:  Actions.ACCEPT_CREDENTIALS,
+            payload: {
+              errorMessage:'Some error occured. Please try again later',
+              credentialAccepted:false
+            }
+          });
+        }
+      })
+      .catch(() => {
+        dispatch({
+          type:  Actions.ACCEPT_CREDENTIALS,
+          payload: {
+            errorMessage:'Some error occured. Please try again later',
+            credentialAccepted:false
+          }
+        });
+      });
+    }
+  };
 }
 const credentialsData = (certificateType) => {
   let data = {};

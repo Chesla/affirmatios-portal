@@ -8,6 +8,7 @@ import {
     CardContent,
     Grid,
     CircularProgress,
+    Button
 } from "@material-ui/core";
 import LocalHospitalIcon from '@material-ui/icons/LocalHospital';
 import SchoolIcon from '@material-ui/icons/School';
@@ -17,7 +18,8 @@ import {
   loader
 } from "../actions/userAction";
 import {
-    getAllCredentials
+    getAllCredentials,
+    acceptCredential
 } from "../actions/credentialAction";
 const Credentials = (props) => {
   const dispatch = useDispatch();
@@ -32,6 +34,9 @@ const Credentials = (props) => {
   );
   const errorMessage = useSelector(
     (state) => state.credential.errorMessage
+  );
+  const credentialAccepted = useSelector(
+    (state) => state.credential.credentialAccepted
   );
   const login = () => {
     const username = localStorage.getItem("username");
@@ -117,6 +122,19 @@ const Credentials = (props) => {
                                     {`Issued on: ${c.date}`} <div>(MM/DD/YYYY)</div>
                                 </div>
                             </Grid>
+                            {!c.accept ?
+                              <Grid item xs={12} md={12}>
+                                <Button variant="contained"
+                                  onClick={() => {
+                                    dispatch(loader(true));
+                                    dispatch(acceptCredential(c.credential_exchange_id));
+                                  }}>
+                                  ACCEPT
+                                </Button>
+                              </Grid>
+                              :
+                              null
+                            }
                         </Grid>
                     </Grid>
                 </Grid>
@@ -134,6 +152,7 @@ const Credentials = (props) => {
             </div>
         </div>
         ) : null}
+        {credentialAccepted &&  <Alert severity="error">Credential Accepted Successfully</Alert>}
         {errorMessage && <Alert severity="error">{errorMessage}</Alert>}
         <Card className="layout-card">
           <CardHeader title={"Credentials"}/>

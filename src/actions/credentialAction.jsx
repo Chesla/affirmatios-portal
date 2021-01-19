@@ -19,52 +19,11 @@ export const getAllCredentials = () => {
         payload:false
       })
       let certificates = [];
-      let acceptedCertificate = [];
+      let acceptedCertificates = [];
       let nonAcceptedCertificates = [];
       window.scroll(0, 0);
       Promise.all([resp, resp1]).then(values => {
-        console.log("values",values);
-      });
-      resp1.then((data)=> {
-        if(response1.status === 200) {
-          let certificate = {};
-          acceptedCertificate = data.results.map((r)=>{
-            let type = getType(r.schema_id || "");
-            let name = setProfileName(type);
-            certificate["type"] = type;
-            certificate["date"] = new Date();
-            certificate["name"] = name;
-            certificate["accept"] = true;
-            certificate["id"] = r.cred_def_id;
-            certificate["certificateDetails"] = r.attrs;
-          })
-        }
-      })
-      resp.then((data) => {
-        if (response.status === 200) {
-          let certificate = {};
-          let certificateDetails = {};
-          nonAcceptedCertificates = data.results.map((r)=>{
-              let type = getType(r.schema_id || "");
-              let name = setProfileName(type);
-              certificate["type"] = type;
-              certificate["date"] = r.updated_at;
-              certificate["name"] = name;
-              certificate["accept"] = false;
-              certificate["id"] = r.credential_proposal_dict.cred_def_id;
-              certificate["credential_exchange_id"] = r.credential_exchange_id;
-              certificateDetails = r.credential_proposal_dict.credential_proposal.attributes;
-              certificate["certificateDetails"] = certificateDetails;
-              return certificate;
-          })
-          dispatch({
-            type: Actions.GET_ALL_CREDENTIALS,
-            payload: {
-                errorMessage:'',
-                certificates:[...nonAcceptedCertificates, ...acceptedCertificate]
-            }
-          });
-        } else {
+        if(values[0].length ===0  && values[1].length ===0){
           dispatch({
             type:  Actions.GET_ALL_CREDENTIALS,
             payload: {
@@ -73,8 +32,39 @@ export const getAllCredentials = () => {
             }
           });
         }
-      })
-      .catch(() => {
+        let acceptedCertificate = {};
+          acceptedCertificate = values[1]?.map((r)=>{
+            let type = getType(r.schema_id || "");
+            let name = setProfileName(type);
+            acceptedCertificate["type"] = type;
+            acceptedCertificate["date"] = new Date();
+            acceptedCertificate["name"] = name;
+            acceptedCertificate["accept"] = true;
+            acceptedCertificate["id"] = r.cred_def_id;
+            acceptedCertificate["certificateDetails"] = r.attrs;
+            return acceptedCertificate;
+          })
+        let nonAcceptedCertificate = {};
+          nonAcceptedCertificates = values[0]?.map((r)=>{
+              let type = getType(r.schema_id || "");
+              let name = setProfileName(type);
+              nonAcceptedCertificate["type"] = type;
+              nonAcceptedCertificate["date"] = r.updated_at;
+              nonAcceptedCertificate["name"] = name;
+              nonAcceptedCertificate["accept"] = false;
+              nonAcceptedCertificate["id"] = r.credential_proposal_dict.cred_def_id;
+              nonAcceptedCertificate["credential_exchange_id"] = r.credential_exchange_id;
+              nonAcceptedCertificate["certificateDetails"] = r.credential_proposal_dict.credential_proposal.attributes;
+              return nonAcceptedCertificate;
+          })
+          dispatch({
+            type: Actions.GET_ALL_CREDENTIALS,
+            payload: {
+                errorMessage:'',
+                certificates:[...nonAcceptedCertificates, ...acceptedCertificate]
+            }
+          });
+      }).catch(() => {
         dispatch({
           type:  Actions.GET_ALL_CREDENTIALS,
           payload: {

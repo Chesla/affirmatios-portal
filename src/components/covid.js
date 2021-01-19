@@ -35,7 +35,7 @@ const Covid = (props) => {
       <React.Fragment>
       <Card>
         <CardHeader 
-          title={<img src={Manipal} className={"medical-logo"} alt={covidLetter.ownerName || "NA"}/>}
+          title={<img src={Manipal} className={"medical-logo"} alt={"Manipal Hospital"}/>}
         />
         <CardContent className="degree-grid">
           <Grid

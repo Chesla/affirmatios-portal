@@ -2,7 +2,7 @@ import * as Actions from "../actions";
 import {getType, setProfileName} from "../constants";
 export const getAllCredentials = () => {
   return async function (dispatch) {
-    let url = process.env.REACT_APP_BASE_URL+"/hospital/view";
+    let url = "http://localhost:8086/issue-credential/records";
     const response = await fetch(url, {
       method: "GET",
     });

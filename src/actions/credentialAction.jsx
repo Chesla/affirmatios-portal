@@ -33,7 +33,7 @@ export const getAllCredentials = () => {
           });
         }
         let acceptedCertificate = {};
-          acceptedCertificate = values[1]?.map((r)=>{
+          acceptedCertificates = values[1]?.map((r)=>{
             let type = getType(r.schema_id || "");
             let name = setProfileName(type);
             acceptedCertificate["type"] = type;

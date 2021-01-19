@@ -133,6 +133,8 @@ h1, h2{
   margin: 10px;
   padding: 10px;
   cursor: pointer;
+  height: 141px;
+  width: 356px;
 }
 .certificate-issuer {
   font-size: 20px;
@@ -231,3 +233,4 @@ h1, h2{
 .MuiDialog-paperWidthSm {
   max-width: 720px !important;
 }
+

@@ -51,7 +51,6 @@ const Credentials = (props) => {
     }
   }
   const fetchAllCredentials = () => {
-    let param = profileInfo.DID;
     dispatch(loader(true));
     dispatch(getAllCredentials());
   }

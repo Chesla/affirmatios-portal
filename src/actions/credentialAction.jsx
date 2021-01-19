@@ -6,7 +6,7 @@ export const getAllCredentials = () => {
     const response = await fetch(url, {
       method: "GET",
     });
-    let url1 = process.env.REACT_APP_BASE_URL+"/credentails"
+    let url1 = process.env.REACT_APP_BASE_URL+"/credentials"
     const response1 = await fetch(url1, {
       method: "GET",
     });
@@ -122,7 +122,7 @@ export const acceptCredential = (credential_exchange_id) => {
 }
 export const getCertificateDetails = (param, certificateType) => {
   return async function (dispatch) {
-    let url = process.env.REACT_APP_BASE_URL+`credentialsbyid?id=${param.credentialId}`;
+    let url = process.env.REACT_APP_BASE_URL+`/credentialsbyid?id=${param.credentialId}`;
     const response = await fetch(url, {
       method: "GET",
     });

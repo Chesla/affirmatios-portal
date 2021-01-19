@@ -406,7 +406,7 @@ const Connections = (props) => {
             onClick={() => {
               dispatch(loader(true));
               dispatch(acceptConnectionRequest({
-                "c_id": connectionURL.split("c_i=")[1],
+                "c_id": connectionURL.split("c_i=")[1]
               }, closeAcceptConnection))
             }}
           >

@@ -76,9 +76,11 @@ export const getAllCredentials = () => {
 }
 export const acceptCredential = (credential_exchange_id) => {
   return async function (dispatch) {
-    let url = `http://localhost:8086/issue-credential/records/${credential_exchange_id}/store`;
+    let url = process.env.REACT_APP_BASE_URL+"/user/store";
+    // let url = `http://localhost:8086/issue-credential/records/${credential_exchange_id}/store`;
     const response = await fetch(url, {
       method: "POST",
+      body:JSON.stringify({exchange_id:credential_exchange_id})
     });
     dispatch({
       type: Actions.LOADER,

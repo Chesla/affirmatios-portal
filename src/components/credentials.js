@@ -21,6 +21,7 @@ import {
     getAllCredentials,
     acceptCredential
 } from "../actions/credentialAction";
+import moment from "moment";
 const Credentials = (props) => {
   const dispatch = useDispatch();
   const profileInfo = useSelector(
@@ -96,12 +97,24 @@ const Credentials = (props) => {
                     spacing={2}
                     alignItems={"center"}
                     >
-                    <Grid item xs={6} md={3}>
+                    <Grid item xs={6} md={4}>
                         <div className="image-container">
                             {setProfilePic(c.type)}
                         </div>
+                        {!c.accept ?
+                                <Button variant="contained"
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    dispatch(loader(true));
+                                    dispatch(acceptCredential(c.credential_exchange_id));
+                                  }}>
+                                  ACCEPT
+                                </Button>
+                              :
+                              null
+                          }
                     </Grid>
-                    <Grid item xs={6} md={9}>
+                    <Grid item xs={6} md={8}>
                         <Grid
                             container
                             spacing={2}
@@ -119,23 +132,10 @@ const Credentials = (props) => {
                             </Grid>
                             <Grid item xs={12} md={12}>
                                 <div className="certificate-issued-on">
-                                    {`Issued on: ${c.date}`} <div>(MM/DD/YYYY)</div>
+                                    {`Issued on: ${moment(c.date).format("MMMM Do YYYY")}`}
                                 </div>
                             </Grid>
-                            {!c.accept ?
-                              <Grid item xs={12} md={12}>
-                                <Button variant="contained"
-                                  onClick={(e) => {
-                                    e.stopPropagation();
-                                    dispatch(loader(true));
-                                    dispatch(acceptCredential(c.credential_exchange_id));
-                                  }}>
-                                  ACCEPT
-                                </Button>
-                              </Grid>
-                              :
-                              null
-                            }
+                            
                         </Grid>
                     </Grid>
                 </Grid>

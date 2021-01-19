@@ -35,7 +35,7 @@ const Degree = (props) => {
         <React.Fragment>
         <Card>
           <CardHeader 
-            title={<img src={KIIT} className={"office-logo"} alt={degreeLetter.ownerName || "NA"}/>}
+            title={<img src={KIIT} className={"office-logo"} alt={"KIIT university"}/>}
           />
           <CardContent className="degree-grid">
             <Grid
@@ -46,7 +46,7 @@ const Degree = (props) => {
             >
                <Grid item xs={12} md={12} >
                     <div className={"degree-certificate-name"}>
-                        <b> {degreeLetter.certificateName || "NA"} </b>
+                        <b> PROVISIONAL CERTIFICATE </b>
                     </div>
                </Grid>
                 <Grid item xs={12} md={12} >
@@ -69,8 +69,8 @@ const Degree = (props) => {
             >
                <Grid item xs={12} md={12} className={"degree-certificate-details"}>
                    This is to certify that <b>{degreeLetter.name || "NA"}</b> <br/>
-                   bearing the Registration No. <b>{degreeLetter.verificationId || "NA"}</b> <br/>
-                   has successfully completed in the <b>{degreeLetter.dol || "NA"}</b> <br/>
+                   bearing the Registration No. <b>{degreeLetter.roll_number || "NA"}</b> <br/>
+                   has successfully completed in the <b>{degreeLetter.completed_date || "NA"}</b> <br/>
                    all the prescribed requirements under the regulations <br/>
                    for the degree of <b>{degreeLetter.department || "NA"}</b>
                </Grid>
@@ -92,10 +92,10 @@ const Degree = (props) => {
                             style={{textAlign:"left"}}
                         >
                             <Grid item xs={12} md={12}>
-                                Place: <b>{degreeLetter.location || "NA"}</b>
+                                Place: <b>{degreeLetter.address || "NA"}</b>
                             </Grid>
                             <Grid item xs={12} md={12}>
-                                Date: <b>{degreeLetter.issuedOn || "NA"}</b>
+                                Date: <b>{degreeLetter.issued_date || "NA"}</b>
                             </Grid>
                         </Grid>
                     </Grid>
@@ -108,10 +108,10 @@ const Degree = (props) => {
                         style={{textAlign:"right"}}
                     >
                         <Grid item xs={12} md={12}>
-                            {degreeLetter.issuedBy || "NA"}
+                            Prachet Bhuyian
                         </Grid>
                         <Grid item xs={12} md={12}>
-                            {degreeLetter.issuedByTeam || "NA"}
+                            Registar
                         </Grid>
                     </Grid>
                 </Grid>

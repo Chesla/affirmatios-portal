@@ -2,7 +2,7 @@ import * as Actions from "../actions";
 import {getType, setProfileName} from "../constants";
 export const getAllCredentials = () => {
   return async function (dispatch) {
-    let url = process.env.REACT_APP_BASE_URL+"/hospital/view";
+    let url = process.env.REACT_APP_BASE_URL+`/${process.env.REACT_APP_SCHEMA_AGENT}/view`;
     const response = await fetch(url, {
       method: "GET",
     });
@@ -166,7 +166,8 @@ export const getCertificateDetails = (param, certificateType) => {
 }
 export const issueCredential = (param) => {
   return async function (dispatch) {
-    let url = process.env.REACT_APP_BASE_URL+"/hospital/issue";
+    let url = process.env.REACT_APP_BASE_URL+`/${process.env.REACT_APP_SCHEMA_AGENT}/issue`;
+    // let url = process.env.REACT_APP_BASE_URL+"/hospital/issue";
     const response = await fetch(url, {
       method: "POST",
       body:JSON.stringify(param)

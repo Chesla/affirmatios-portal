@@ -125,7 +125,8 @@ const Credentials = (props) => {
                             {!c.accept ?
                               <Grid item xs={12} md={12}>
                                 <Button variant="contained"
-                                  onClick={() => {
+                                  onClick={(e) => {
+                                    e.stopPropagation();
                                     dispatch(loader(true));
                                     dispatch(acceptCredential(c.credential_exchange_id));
                                   }}>
@@ -152,7 +153,7 @@ const Credentials = (props) => {
             </div>
         </div>
         ) : null}
-        {credentialAccepted &&  <Alert severity="error">Credential Accepted Successfully</Alert>}
+        {credentialAccepted &&  <Alert severity="success">Credential Accepted Successfully</Alert>}
         {errorMessage && <Alert severity="error">{errorMessage}</Alert>}
         <Card className="layout-card">
           <CardHeader title={"Credentials"}/>

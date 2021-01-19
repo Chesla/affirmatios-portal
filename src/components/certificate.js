@@ -22,7 +22,6 @@ const Certificate = (props) => {
     );
     const fetchCertificateDetails = () => {
         let param = {
-            DID: profileInfo.DID,
             credentialId: props.match.params.id
         }
         dispatch(loader(true));

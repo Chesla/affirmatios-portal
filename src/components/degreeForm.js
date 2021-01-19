@@ -14,28 +14,20 @@ import PropTypes from "prop-types";
 
 const DegreeForm = (props) => {
     const [degreeParam ,setDegreeParam] = useState({
-        ownerName: props.profileName,
-        certificateName:"",
         department:"",
         name:props.connectionName,
-        verificationId:"",
-        dol:"",
-        location:"",
-        issuedOn:"",
-        issuedBy:"",
-        issuedByTeam:""
+        roll_number:"",
+        completed_date:"",
+        address:"",
+        issued_date:"",
     })
     const [degreeParamError ,setDegreeParamError] = useState({
-        ownerName: false,
-        certificateName:false,
         department:false,
         name:false,
-        verificationId:false,
-        dol:false,
-        location:false,
-        issuedOn:false,
-        issuedBy:false,
-        issuedByTeam:false
+        roll_number:false,
+        completed_date:false,
+        address:false,
+        issued_date:false,
     })
     const setDegreeCredentials = (e) => {
         setDegreeParam({ ...degreeParam, ...{ [e.target.name]: e.target.value } });
@@ -72,16 +64,7 @@ const DegreeForm = (props) => {
             >
                <Grid item xs={12} md={12} >
                     <div className={"degree-certificate-name"}>
-                        <TextField 
-                            id="certificateName" 
-                            name="certificateName"
-                            onChange={setDegreeCredentials}
-                            value={degreeParam.certificateName}
-                            error={degreeParamError.certificateName}
-                            helperText={
-                                degreeParamError.certificateName ? "Please enter certificate name." : ""
-                            }
-                            placeholder={"eg: Provisional Certificate"}/>
+                        <b> PROVISIONAL CERTIFICATE </b>
                     </div>
                </Grid>
                 <Grid item xs={12} md={12} >
@@ -119,14 +102,14 @@ const DegreeForm = (props) => {
                        <div> bearing the Registration No. </div>
                        <div className={"flex-display-text"}>
                             <TextField 
-                                id="verificationId" 
-                                name="verificationId"
-                                value={degreeParam.verificationId}
+                                id="roll_number" 
+                                name="roll_number"
+                                value={degreeParam.roll_number}
                                 onChange={setDegreeCredentials}
                                 placeholder={"eg: 1005042"}
-                                error={degreeParamError.verificationId}
+                                error={degreeParamError.roll_number}
                                 helperText={
-                                    degreeParamError.verificationId ? "Please enter registration no." : ""
+                                    degreeParamError.roll_number ? "Please enter registration no." : ""
                                 }/> 
                        </div>
                    </div>
@@ -134,14 +117,14 @@ const DegreeForm = (props) => {
                        <div> has successfully completed in the  </div>
                        <div className={"flex-display-text"}>
                             <TextField 
-                                id="dol" 
-                                name="dol"
-                                value={degreeParam.dol}
+                                id="completed_date" 
+                                name="completed_date"
+                                value={degreeParam.completed_date}
                                 onChange={setDegreeCredentials}
                                 placeholder={"eg :month of May, 2014"}
-                                error={degreeParamError.dol}
+                                error={degreeParamError.completed_date}
                                 helperText={
-                                    degreeParamError.dol ? "Please enter completion date." : ""
+                                    degreeParamError.completed_date ? "Please enter completion date." : ""
                                 }/>   
                        </div>
                    </div>
@@ -175,14 +158,14 @@ const DegreeForm = (props) => {
                                     <div> Place:    </div>
                                     <div className={"flex-display-text"}>
                                         <TextField 
-                                            id="location" 
-                                            name="location"
-                                            value={degreeParam.location}
+                                            id="address" 
+                                            name="address"
+                                            value={degreeParam.address}
                                             onChange={setDegreeCredentials}
                                             placeholder={"eg: Bhubaneswar"}
-                                            error={degreeParamError.location}
+                                            error={degreeParamError.address}
                                             helperText={
-                                                degreeParamError.location ? "Please enter place." : ""
+                                                degreeParamError.address ? "Please enter place." : ""
                                             }/>
                                     </div>
                                 </div>
@@ -192,14 +175,14 @@ const DegreeForm = (props) => {
                                     <div> Date:    </div>
                                     <div className={"flex-display-text"}>
                                         <TextField 
-                                            id="issuedOn" 
-                                            name="issuedOn"
-                                            value={degreeParam.issuedOn}
+                                            id="issued_date" 
+                                            name="issued_date"
+                                            value={degreeParam.issued_date}
                                             onChange={setDegreeCredentials}
                                             placeholder={"eg: 26th May 2014"}
-                                            error={degreeParamError.issuedOn}
+                                            error={degreeParamError.issued_date}
                                             helperText={
-                                                degreeParamError.issuedOn ? "Please enter issued on date." : ""
+                                                degreeParamError.issued_date ? "Please enter issued on date." : ""
                                             }/>
                                     </div>
                                 </div>
@@ -215,28 +198,10 @@ const DegreeForm = (props) => {
                         style={{textAlign:"right"}}
                     >
                         <Grid item xs={12} md={12}>
-                            <TextField 
-                                    id="issuedBy" 
-                                    name="issuedBy"
-                                    value={degreeParam.issuedBy}
-                                    onChange={setDegreeCredentials}
-                                    placeholder={"Issuer name"}
-                                    error={degreeParamError.issuedBy}
-                                    helperText={
-                                        degreeParamError.issuedBy ? "Please enter issuer name." : ""
-                                    }/>
+                            Prachet Bhuyian
                         </Grid>
                         <Grid item xs={12} md={12}>
-                            <TextField 
-                                    id="issuedByTeam" 
-                                    name="issuedByTeam"
-                                    value={degreeParam.issuedByTeam}
-                                    onChange={setDegreeCredentials}
-                                    placeholder={"Issuer department"}
-                                    error={degreeParamError.issuedByTeam}
-                                    helperText={
-                                        degreeParamError.issuedByTeam ? "Please enter issuer department." : ""
-                                    }/>
+                            Registar
                         </Grid>
                     </Grid>
                 </Grid>

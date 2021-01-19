@@ -10,7 +10,9 @@ import {
     InputLabel,
     Select,
     MenuItem,
-    FormHelperText
+    FormHelperText,
+    InputAdornment,
+    Input
   } from "@material-ui/core";
   import React, {useState} from "react";
   import Manipal from "../images/manipallogo.jpeg";
@@ -34,7 +36,11 @@ import PropTypes from "prop-types";
         date:false,
     })
     const setCovidCredentials = (e) => {
-        setCovidParam({ ...covidParam, ...{ [e.target.name]: e.target.value } });
+        if(e.target.name==="age"){
+            setCovidParam({ ...covidParam, ...{ [e.target.name]: +e.target.value } });
+        }else{
+            setCovidParam({ ...covidParam, ...{ [e.target.name]: e.target.value } });
+        }
     }
     const issueCertificate = () => {
         let param = {};
@@ -49,7 +55,6 @@ import PropTypes from "prop-types";
         }
         setCovidParamError(param);
         if(passCheck){
-            console.log("covidParam",covidParam);
             props.submitCredentialForm(covidParam);
         }
     }
@@ -110,12 +115,13 @@ import PropTypes from "prop-types";
                        </div>
                        <div> Age </div>
                        <div className={"flex-display-text"}>
-                            <TextField 
+                            <Input 
                                 id="age" 
                                 name="age"
                                 value={covidParam.age}
                                 onChange={setCovidCredentials}
-                                placeholder={"eg: 27yrs"}
+                                placeholder={"eg: 27"}
+                                endAdornment={<InputAdornment position="end">yrs</InputAdornment>}
                                 error={covidParamError.age}
                                 helperText={
                                     covidParamError.age ? "Please enter age." : ""

@@ -35,6 +35,9 @@ const Notifications = (props) => {
   const errorMessage = useSelector(
     (state) => state.notification.errorMessage
   );
+  const mapCredDEFToReferent = useSelector(
+    (state) => state.credential.mapCredDEFToReferent
+  )
   const login = () => {
     const username = localStorage.getItem("username");
     const password = localStorage.getItem("password");
@@ -73,13 +76,29 @@ const Notifications = (props) => {
         default : return null;
       }
   }
-  const notificationAction = (e) => {
+  const notificationAction = (e, type,details) => {
+      let attr = details.allData.presentation_request.requested_attributes;
+      for(let i in attr){
+        attr[i]["cred_id"] = mapCredDEFToReferent[attr[i].restrictions[0].cred_def_id];
+        attr[i]["revealed"] = true;
+        delete attr[i]["restrictions"];
+      }
+      if(type === "approve"){
+        let obj = {
+          "requested_attributes": attr,
+          "requested_predicates": {},
+          "self_attested_attributes": {}
+        }
+        dispatch(loader(true));
+        dispatch(actionOnNotification(type,obj,details.allData.presentation_exchange_id));
+      }else{
         let  notificationid = e.currentTarget.getAttribute("notificationid")
         let modifiedNotification = notifications.filter((f)=>{
           return f.requesterId !== notificationid
         })
         dispatch(loader(true));
-        dispatch(actionOnNotification(modifiedNotification));
+        dispatch(actionOnNotification(type, modifiedNotification));
+      }
   }
   const showNotifications = () => {
     return (notifications||[]).map((n)=>{
@@ -109,7 +128,7 @@ const Notifications = (props) => {
                         </Grid> 
                         <Grid item xs={12} md={12}>
                             <div className="requester-info">
-                                {n.requestedData && n.requestedData.message ? n.requestedData.message : ""}
+                                {n.requestingMessage || ""}
                             </div>
                         </Grid> 
                         <Grid item xs={12} md={12}>
@@ -125,7 +144,7 @@ const Notifications = (props) => {
                         className="full-width"
                         name="approve"
                         notificationid={n.requesterId}
-                        onClick={notificationAction}
+                        onClick={(e)=>notificationAction(e,"approve",n)}
                     >
                         APPROVE
                     </Button>
@@ -136,7 +155,7 @@ const Notifications = (props) => {
                         className="full-width"
                         name="reject"
                         notificationid={n.requesterId}
-                        onClick={notificationAction}
+                        onClick={(e)=>notificationAction(e,"reject",n)}
                     >
                         REJECT
                     </Button>

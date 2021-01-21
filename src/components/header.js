@@ -51,7 +51,7 @@ const Header = (props) => {
       switch(type){
         case "medical" : return "Manipal Hospitals"
         case "school" : return "KIIT University"
-        case "business" : return "TCS"
+        case "business" : return "Walmart"
         default : return <AccountCircle />;
       }
   }

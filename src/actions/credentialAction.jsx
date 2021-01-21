@@ -283,42 +283,69 @@ export const getAlreadyRequestedCertificateDetails = (param) => {
 }
 
 export const requestCredentials = (param) => {
-  return function (dispatch) {
+  return async function (dispatch) {
+    let url = process.env.REACT_APP_BASE_URL+"/employer/request-proof";
+    const response = await fetch(url, {
+      method: "POST",
+      body:JSON.stringify(param)
+    });
     dispatch({
       type: Actions.LOADER,
       payload:false
     })
-    let actionType = true;
-    if(actionType){
+    if (response.status === 200) {
+      const resp = response.json();
+      window.scroll(0, 0);
+      resp.then((data) => {
+        console.log("data",data);
+      })
+      .catch(() => {
         dispatch({
-          type:  Actions.CREDENTIALS_REQUESTED,
-          payload:{
-            credentialRequested:param,
-            successRequestMessage:true,
-            errorMessage:""
+          type:  Actions.ACCEPT_CREDENTIALS,
+          payload: {
+            errorMessage:'Some error occured. Please try again later',
+            credentialAccepted:false
           }
-        })
-        window.setTimeout(()=>{
-          dispatch({
-            type:  Actions.CREDENTIALS_REQUESTED,
-            payload:{
-              credentialRequested:param,
-              successRequestMessage:false,
-              errorMessage:""
-            }
-          })
-        },1000)
-    }else{
-      if(actionType){
-        dispatch({
-          type:  Actions.CREDENTIALS_REQUESTED,
-          payload:{
-            credentialRequested: [],
-            successRequestMessage:false,
-            errorMessage:"Some error occured. Please try again later",
-          }
-        })
-      }
+        });
+      });
     }
-  }
+  };
+  // return function (dispatch) {
+  //   dispatch({
+  //     type: Actions.LOADER,
+  //     payload:false
+  //   })
+  //   let actionType = true;
+  //   if(actionType){
+  //       dispatch({
+  //         type:  Actions.CREDENTIALS_REQUESTED,
+  //         payload:{
+  //           credentialRequested:param,
+  //           successRequestMessage:true,
+  //           errorMessage:""
+  //         }
+  //       })
+  //       window.setTimeout(()=>{
+  //         dispatch({
+  //           type:  Actions.CREDENTIALS_REQUESTED,
+  //           payload:{
+  //             credentialRequested:param,
+  //             successRequestMessage:false,
+  //             errorMessage:""
+  //           }
+  //         })
+  //       },1000)
+  //   }else{
+  //     if(actionType){
+  //       dispatch({
+  //         type:  Actions.CREDENTIALS_REQUESTED,
+  //         payload:{
+  //           credentialRequested: [],
+  //           successRequestMessage:false,
+  //           errorMessage:"Some error occured. Please try again later",
+  //         }
+  //       })
+  //     }
+  //   }
+  // }
 }

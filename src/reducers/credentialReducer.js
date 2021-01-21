@@ -10,7 +10,8 @@ const INITIAL_STATE = {
     certificateAlreadyRequested:[],
     credentialRequested:[],
     credentialAccepted:null,
-    successRequestMessage:false
+    successRequestMessage:false,
+    mapCredDEFToReferent:{}
 };
 const credentialReducer = (state = INITIAL_STATE, action) => {
     switch (action.type) {
@@ -19,7 +20,8 @@ const credentialReducer = (state = INITIAL_STATE, action) => {
             return {
                 ...state,
                 errorMessage:payload.errorMessage|| "",
-                certificates:payload.certificates|| []
+                certificates:payload.certificates|| [],
+                mapCredDEFToReferent:payload.mapCredDEFToReferent || {}
             }
         }
         case Actions.PARTICLUAR_DETAIL_CREDENTIALS : {
@@ -75,7 +77,7 @@ const credentialReducer = (state = INITIAL_STATE, action) => {
             return {
                 ...state,
                 errorMessage:payload.errorMessage|| "",
-                credentialRequested:payload.credentialRequested|| [],
+                // credentialRequested:payload.credentialRequested|| [],
                 successRequestMessage:payload.successRequestMessage ||false
             }
         }

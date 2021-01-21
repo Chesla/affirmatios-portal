@@ -62,7 +62,7 @@ const RequestNewCredentails = (props) => {
         }
     }
     const credentails = {
-        "degree" : {
+        "Degree" : {
             params:[
                 {id : "name", name : " Name"},
                 {id : "roll_number", name : " Registartion Number"}, 
@@ -85,7 +85,7 @@ const RequestNewCredentails = (props) => {
                 {id :"issuedOn" , name : "Issued On"}
             ]
         },
-        "medical":{
+        "Hospital":{
             params:[
                 {id :"name" , name: "Name"},
                 {id :"sex" , name: "Sex"},
@@ -152,10 +152,10 @@ const RequestNewCredentails = (props) => {
                         }}
                         label="Certificate Type"
                     >
-                        <MenuItem value={"degree"}>
+                        <MenuItem value={"Degree"}>
                                 {"Provisional Certificate"}
                         </MenuItem>
-                        <MenuItem value={"hospital"}>
+                        <MenuItem value={"Hospital"}>
                                 {"Covid Certificate"}
                         </MenuItem>
                         <MenuItem value={"employeer"}>
@@ -193,7 +193,6 @@ const RequestNewCredentails = (props) => {
         let data = {
             connection_id:connectionName.connection_id,
             record_type:certificateType,
-            // paramsSelected
         };
         console.log("people",data);
         dispatch(requestCredentials(data));
@@ -265,7 +264,7 @@ const RequestNewCredentails = (props) => {
     return (
       <div className="degree-grid-form">
         {errorMessage && <Alert severity="error">{errorMessage}</Alert>}
-        {successRequestMessage && <Alert severity="success">{"Request sent successfully"}</Alert>}
+        {successRequestMessage && <Alert severity="success">{"Credentials Request sent successfully"}</Alert>}
         <Card className={"mgTop10"}>
           <CardHeader className={"mgleft10"} title={"Request Credentials"}/>
           <CardContent>

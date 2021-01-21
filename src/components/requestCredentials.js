@@ -26,6 +26,8 @@ import {
   import {
     getAlreadyRequestedCertificateDetails
   } from "../actions/credentialAction";
+import moment from "moment";
+
 const RequestCredentials = (props) => {
     const dispatch = useDispatch();
     const profileInfo = useSelector(
@@ -39,14 +41,10 @@ const RequestCredentials = (props) => {
     )
     const [showCredentialDialog, setShowCredentialDialog] = useState(false);
     const [credentialDataByAgent, setCredentialDataByAgent] = useState({});
-    const [certificateType, setFetchedCertificateType] = useState("");
+    // const [certificateType, setFetchedCertificateType] = useState("");
     const fetchRequestedCertificateDetails = () => {
-        let param = {
-            DID: profileInfo.DID,
-            credentialId: props.match.params.identity
-        }
         dispatch(loader(true));
-        dispatch(getAlreadyRequestedCertificateDetails(param));
+        dispatch(getAlreadyRequestedCertificateDetails());
     }
     const credentialRequested = useSelector(
         (state) => state.credential.credentialRequested
@@ -76,30 +74,28 @@ const RequestCredentials = (props) => {
         }
     },[profileInfo]);
     
-    const showRequestedCredentials = () => {
-        let type = certificateType;
-        switch(type){
-                case "medical" : return <Covid readFrom={credentialDataByAgent[type]}/>;
-                case "school" : return <Degree readFrom={credentialDataByAgent[type]}/>;
-                case "business" : return <Experience readFrom={credentialDataByAgent[type]}/>;
-                default : return null;
-        }
-    }
+    // const showRequestedCredentials = () => {
+    //     // let type = certificateType;
+    //     switch(type){
+    //             case "medical" : return <Covid readFrom={credentialDataByAgent[type]}/>;
+    //             case "school" : return <Degree readFrom={credentialDataByAgent[type]}/>;
+    //             case "business" : return <Experience readFrom={credentialDataByAgent[type]}/>;
+    //             default : return null;
+    //     }
+    // }
     const setCertificateType = (type) => {
-        type = type?.toLowerCase();
         switch(type){
-          case "medical" : return "COVID CERTIFICATE"
-          case "school" : return "DEGREE CERTIFICATE"
-          case "business" : return "EXPERIENCE LETTER"
+          case "Proof of Health" : return "COVID CERTIFICATE"
+          case "Proof of Education" : return "DEGREE CERTIFICATE"
+          case "Proof of Employment" : return "EXPERIENCE LETTER"
           default : return null;
         }
     }
     const setProfilePic = (type) => {
-        type = type?.toLowerCase();
         switch(type){
-          case "medical" : return <LocalHospitalIcon style={{ fontSize: 50 }}/>
-          case "school" : return <SchoolIcon style={{ fontSize: 50 }}/>
-          case "business" : return <BusinessIcon style={{ fontSize: 50 }}/>
+          case "Proof of Health" : return <LocalHospitalIcon style={{ fontSize: 50 }}/>
+          case "Proof of Education" : return <SchoolIcon style={{ fontSize: 50 }}/>
+          case "Proof of Employment" : return <BusinessIcon style={{ fontSize: 50 }}/>
           default : return null;
         }
     }
@@ -135,9 +131,9 @@ const RequestCredentials = (props) => {
             return(
                 <Grid item xs={6} md={4} key={index} 
                         onClick={()=>{
-                          setCredentialData(c.type);
+                          setCredentialData(c.presentation_request.name);
                           setShowCredentialDialog(true);
-                          setFetchedCertificateType(c.type);
+                        //   setFetchedCertificateType(c.type);
                         }
                         }>
                     <div className="certificate-container">
@@ -148,7 +144,7 @@ const RequestCredentials = (props) => {
                         >
                         <Grid item xs={6} md={3}>
                             <div className="image-container">
-                                {setProfilePic(c.type)}
+                                {setProfilePic(c.presentation_request.name)}
                             </div>
                         </Grid>
                         <Grid item xs={6} md={9}>
@@ -157,20 +153,42 @@ const RequestCredentials = (props) => {
                                 spacing={2}
                                 alignItems={"center"}
                             >
-                                <Grid item xs={6} md={12}>
-                                    <div className="certificate-issuer">
-                                        {c.ownerName}
-                                    </div>
-                                </Grid>
                                 <Grid item xs={12} md={12}>
                                     <div className="certificate-name">
-                                        {setCertificateType(c.type)}
+                                        {setCertificateType(c.presentation_request.name)}
                                     </div>
                                 </Grid>
                                 <Grid item xs={12} md={12}>
                                     <div className="certificate-issued-on">
-                                        {`Requested on: ${c.requestedOn}`} <div>(MM/DD/YYYY)</div>
+                                        {`Requested on: ${moment(c.date).format("MMMM Do YYYY")}`}
                                     </div>
+                                </Grid>
+                                <Grid item xs={12} md={12}>
+                                    {c.state=== "request_sent" ? 
+                                    <Button variant="contained"
+                                        color="secondary"
+                                    >
+                                        PENDING
+                                    </Button>
+                                    :
+                                    c.state=== "request_received" ?
+                                        <Button variant="contained"
+                                            onClick={() => {
+                                                setShowCredentialDialog(false);
+                                                setCredentialDataByAgent({});
+                                            }}
+                                        >
+                                            VERFIY
+                                        </Button>
+                                    :
+                                        c.state=== "verified" ?
+                                            <Button variant="contained"
+                                                className={"verified-button"}
+                                            >
+                                                VERFIED
+                                            </Button>
+                                    : null
+                                    }
                                 </Grid>
                             </Grid>
                         </Grid>
@@ -209,7 +227,7 @@ const RequestCredentials = (props) => {
                 >
                     <DialogContent>
                         <DialogContentText id="alert-dialog-description">
-                            {showRequestedCredentials()}
+                            {/* {showRequestedCredentials()} */}
                         </DialogContentText>
                     </DialogContent>
                     <DialogActions>
@@ -217,7 +235,6 @@ const RequestCredentials = (props) => {
                             onClick={() => {
                                 setShowCredentialDialog(false);
                                 setCredentialDataByAgent({});
-                                setFetchedCertificateType("");
                               }
                             }>
                             Close

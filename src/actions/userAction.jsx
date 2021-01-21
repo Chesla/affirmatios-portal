@@ -48,9 +48,9 @@ export const loginUser = (data, actionType) => {
         }else{
           profileInfo = {
             DID: "QWETVFF",
-            firstLastName:"TCS",
+            firstLastName:"Walmart",
             roles:["verifier","issuer"],
-            email:"tcs@gmail.com",
+            email:"walmart@gmail.com",
             mobile:"+91 9591790478",
             type:"people",
             agentType

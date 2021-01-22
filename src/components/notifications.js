@@ -87,25 +87,17 @@ const Notifications = (props) => {
       let attr = details.allData.presentation_request.requested_attributes;
       for(let i in attr){
         attr[i]["cred_id"] = mapCredDEFToReferent[attr[i].restrictions[0].cred_def_id];
-        attr[i]["revealed"] = true;
+        attr[i]["revealed"] = type==="approve" ? true : false;
         delete attr[i]["restrictions"];
       }
-      if(type === "approve"){
-        let obj = {
-          "requested_attributes": attr,
-          "requested_predicates": {},
-          "self_attested_attributes": {}
-        }
-        dispatch(loader(true));
-        dispatch(actionOnNotification(type,obj,details.allData.presentation_exchange_id));
-      }else{
-        let  notificationid = e.currentTarget.getAttribute("notificationid")
-        let modifiedNotification = notifications.filter((f)=>{
-          return f.requesterId !== notificationid
-        })
-        dispatch(loader(true));
-        dispatch(actionOnNotification(type, modifiedNotification));
+      let obj = {
+        "requested_attributes": attr,
+        "requested_predicates": {},
+        "self_attested_attributes": {}
       }
+      dispatch(loader(true));
+      dispatch(actionOnNotification(type,obj,details.allData.presentation_exchange_id));
+     
   }
   const showNotifications = () => {
     return (notifications||[]).map((n)=>{

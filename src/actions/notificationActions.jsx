@@ -75,19 +75,6 @@ export const getAllNotifications = (data) => {
 }
 export const actionOnNotification = (type,data,presentation_exchange_id) => {
   return async function (dispatch) {
-    if(type === "reject"){
-      dispatch({
-        type: Actions.LOADER,
-        payload:false
-      });
-      dispatch({
-        type: Actions.GET_ALL_NOTIFICATIONS,
-        payload: {
-            errorMessage:'',
-            notifications:data
-        }
-      });
-    }else{
         let url = `http://localhost:8086/present-proof/records/${presentation_exchange_id}/send-presentation`;
         const response = await fetch(url, {
           method: "POST",
@@ -142,6 +129,5 @@ export const actionOnNotification = (type,data,presentation_exchange_id) => {
             }
           });
         }
-    }
   };
 }

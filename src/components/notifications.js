@@ -18,6 +18,9 @@ import {
   loader
 } from "../actions/userAction";
 import {
+  getAllCredentials
+} from "../actions/credentialAction";
+import {
     getAllNotifications,
     actionOnNotification
 } from "../actions/notificationActions";
@@ -34,6 +37,9 @@ const Notifications = (props) => {
   );
   const errorMessage = useSelector(
     (state) => state.notification.errorMessage
+  );
+  const notificationActionMsg = useSelector(
+    (state) => state.notification.notificationActionMsg
   );
   const mapCredDEFToReferent = useSelector(
     (state) => state.credential.mapCredDEFToReferent
@@ -53,6 +59,7 @@ const Notifications = (props) => {
   const fetchAllNotifications = () => {
     let param = profileInfo.DID;
     dispatch(loader(true));
+    dispatch(getAllCredentials());
     dispatch(getAllNotifications(param));
   }
   useEffect(()=>{
@@ -80,27 +87,19 @@ const Notifications = (props) => {
       let attr = details.allData.presentation_request.requested_attributes;
       for(let i in attr){
         attr[i]["cred_id"] = mapCredDEFToReferent[attr[i].restrictions[0].cred_def_id];
-        attr[i]["revealed"] = true;
+        attr[i]["revealed"] = type==="approve" ? true : false;
         delete attr[i]["restrictions"];
       }
-      if(type === "approve"){
-        let obj = {
-          "requested_attributes": attr,
-          "requested_predicates": {},
-          "self_attested_attributes": {}
-        }
-        dispatch(loader(true));
-        dispatch(actionOnNotification(type,obj,details.allData.presentation_exchange_id));
-      }else{
-        let  notificationid = e.currentTarget.getAttribute("notificationid")
-        let modifiedNotification = notifications.filter((f)=>{
-          return f.requesterId !== notificationid
-        })
-        dispatch(loader(true));
-        dispatch(actionOnNotification(type, modifiedNotification));
+      let obj = {
+        "requested_attributes": attr,
+        "requested_predicates": {},
+        "self_attested_attributes": {}
       }
+      dispatch(loader(true));
+      dispatch(actionOnNotification(type,obj,details.allData.presentation_exchange_id));
   }
   const showNotifications = () => {
+    console.log("notifications",notifications);
     return (notifications||[]).map((n)=>{
         return(
             <Grid
@@ -173,6 +172,7 @@ const Notifications = (props) => {
             </div>
         </div>
         ) : null}
+        {notificationActionMsg && <Alert severity="success">Approved Successfully</Alert>}
         {errorMessage && <Alert severity="error">{errorMessage}</Alert>}
         <Card className="layout-card">
           <CardHeader title={"Notifications"}/>

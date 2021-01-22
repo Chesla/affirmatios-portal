@@ -16,7 +16,7 @@ export const getAllNotifications = (data) => {
           let requestedData = {};
 
           data.results?.filter((r)=>{
-            return r.state !== "presentation_acked"
+            return r.state === "request_received"
           })
           .map((r)=>{
             if(!requestedData[r.presentation_request.name]){
@@ -75,44 +75,32 @@ export const getAllNotifications = (data) => {
 }
 export const actionOnNotification = (type,data,presentation_exchange_id) => {
   return async function (dispatch) {
-    console.log("actionOnNotification",type,data,presentation_exchange_id);
-    if(type === "reject"){
-      dispatch({
-        type: Actions.LOADER,
-        payload:false
-      });
-      dispatch({
-        type: Actions.GET_ALL_NOTIFICATIONS,
-        payload: {
-            errorMessage:'',
-            notifications:data
-        }
-      });
-    }else{
         let url = `http://localhost:8086/present-proof/records/${presentation_exchange_id}/send-presentation`;
         const response = await fetch(url, {
           method: "POST",
+          headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+          },
           body:JSON.stringify(data)
+        });
+        dispatch({
+          type: Actions.LOADER,
+          payload:false
         });
         if (response.status === 200) {
           const resp = response.json();
           resp.then((data) => {
             if (response.status === 200) {
-              console.log("data",data);
               dispatch(getAllNotifications());
-            } else {
-              dispatch({
-                type: Actions.LOADER,
-                payload:false
-              })
               dispatch({
                 type:  Actions.NOTIFICATION_ACTION,
                 payload: {
                   errorMessage:'Some error occured. Please try again later',
-                  notificationAction:false
+                  notificationActionMsg:true,
                 }
               });
-            }
+            } 
           })
           .catch(() => {
             dispatch({
@@ -123,11 +111,23 @@ export const actionOnNotification = (type,data,presentation_exchange_id) => {
               type:  Actions.NOTIFICATION_ACTION,
               payload: {
                 errorMessage:'Some error occured. Please try again later',
-                notificationAction:false
+                notificationActionMsg:false
               }
             });
           });
         }
-    }
+        else {
+          dispatch({
+            type: Actions.LOADER,
+            payload:false,
+          })
+          dispatch({
+            type:  Actions.NOTIFICATION_ACTION,
+            payload: {
+              errorMessage:'Some error occured. Please try again later',
+              notificationActionMsg:false,
+            }
+          });
+        }
   };
 }

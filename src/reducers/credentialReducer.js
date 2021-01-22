@@ -11,7 +11,9 @@ const INITIAL_STATE = {
     credentialRequested:[],
     credentialAccepted:null,
     successRequestMessage:false,
-    mapCredDEFToReferent:{}
+    mapCredDEFToReferent:{},
+    verifiedCredentials:{},
+    savedSchema:[]
 };
 const credentialReducer = (state = INITIAL_STATE, action) => {
     switch (action.type) {
@@ -77,8 +79,22 @@ const credentialReducer = (state = INITIAL_STATE, action) => {
             return {
                 ...state,
                 errorMessage:payload.errorMessage|| "",
-                // credentialRequested:payload.credentialRequested|| [],
                 successRequestMessage:payload.successRequestMessage ||false
+            }
+        }
+        case Actions.CREDENTIALS_VERIFY : {
+            const {payload} = action;
+            return {
+                ...state,
+                errorMessage:payload.errorMessage|| "",
+                verifiedCredentials:payload.verifiedCredentials ||{}
+            }
+        }
+        case Actions.SAVE_CREDENTIAL_SCHEMA : {
+            const {payload} = action;
+            return {
+                ...state,
+                savedSchema:payload.savedSchema || []
             }
         }
         default : {

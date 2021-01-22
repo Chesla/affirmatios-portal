@@ -19,12 +19,15 @@ import {
 import LocalHospitalIcon from '@material-ui/icons/LocalHospital';
 import SchoolIcon from '@material-ui/icons/School';
 import BusinessIcon from '@material-ui/icons/Business';
+import ErrorOutlineIcon from '@material-ui/icons/ErrorOutline';
+import CheckCircleOutlineIcon from '@material-ui/icons/CheckCircleOutline';
 import {
     loginUser,
     loader
   } from "../actions/userAction";
   import {
-    getAlreadyRequestedCertificateDetails
+    getAlreadyRequestedCertificateDetails,
+    verifyCredentials
   } from "../actions/credentialAction";
 import moment from "moment";
 
@@ -40,15 +43,17 @@ const RequestCredentials = (props) => {
         (state) => state.credential.certificateAlreadyRequested
     )
     const [showCredentialDialog, setShowCredentialDialog] = useState(false);
-    const [credentialDataByAgent, setCredentialDataByAgent] = useState({});
-    // const [certificateType, setFetchedCertificateType] = useState("");
+    const [credentialState, setCredentialState] = useState("");
+    const [credentialRequestType, setCredentialRequestType] = useState("");
     const fetchRequestedCertificateDetails = () => {
         dispatch(loader(true));
         dispatch(getAlreadyRequestedCertificateDetails());
     }
-    const credentialRequested = useSelector(
-        (state) => state.credential.credentialRequested
+    const verifiedCredentials = useSelector(
+        (state) => state.credential.verifiedCredentials
     )
+    const [acceptedData, setAcceptedData] = useState(verifiedCredentials);
+    const [exchangeId, setExchangeId] = useState("");
     const login = () => {
         const username = localStorage.getItem("username");
         const password = localStorage.getItem("password");
@@ -73,16 +78,12 @@ const RequestCredentials = (props) => {
             fetchRequestedCertificateDetails();
         }
     },[profileInfo]);
-    
-    // const showRequestedCredentials = () => {
-    //     // let type = certificateType;
-    //     switch(type){
-    //             case "medical" : return <Covid readFrom={credentialDataByAgent[type]}/>;
-    //             case "school" : return <Degree readFrom={credentialDataByAgent[type]}/>;
-    //             case "business" : return <Experience readFrom={credentialDataByAgent[type]}/>;
-    //             default : return null;
-    //     }
-    // }
+    useEffect(()=>{
+        if(Object.keys(verifiedCredentials||{}).length !==0){
+            setShowCredentialDialog(true);
+            setAcceptedData(verifiedCredentials);
+        }
+    },[verifiedCredentials])
     const setCertificateType = (type) => {
         switch(type){
           case "Proof of Health" : return "COVID CERTIFICATE"
@@ -99,43 +100,37 @@ const RequestCredentials = (props) => {
           default : return null;
         }
     }
-    const setCredentialData = (type) =>{
-        let credential  = credentialRequested["people"] || [];
-        let obj = {};
-        let certificateType ;
-        if(type === "medical"){
-            certificateType = "medical"
-        }else if(type === "business"){
-            certificateType = "experience"
-        }else{
-            certificateType = "degree"
-        }
-        for(let i=0;i<credential.length;i++){
-            if(Object.keys(credential[i])[0] === certificateType){
-                for(let j=0; j<Object.values(credential[i])[0].params.length;j++){
-                    let param = Object.values(credential[i])[0].params[j];
-                    if(credential[i][certificateType]){
-                        for(let k=0 ;k<certificateAlreadyRequested?.length ;k++){
-                            if(certificateAlreadyRequested[k].type === type){
-                                obj[param] = certificateAlreadyRequested[k][param];
-                            }
-                        }
-                    }
-                }
-            }
-        }
-        setCredentialDataByAgent({[type]:obj});
-    }
     const showCredentials = () => {
         return (certificateAlreadyRequested||[]).map((c,index)=>{
+            let rejected = false;
+            let obj = {};
+            let cs = "";
+            if(c.presentation && c.presentation.requested_proof){
+                if(Object.keys(c.presentation.requested_proof.unrevealed_attrs || {}).length){
+                    rejected = true;
+                }
+                if(Object.keys(c.presentation.requested_proof.revealed_attrs || {}).length){
+                    let req = c.presentation_request.requested_attributes;
+                    let reveal = c.presentation.requested_proof.revealed_attrs;
+                    
+                    for(let i in reveal){
+                        obj[req[i].name]= reveal[i].raw
+                    }
+                }
+
+            }
+            if(c.state=== "request_sent"){
+                cs="PENDING";
+            }else if(c.state=== "presentation_received" && !rejected){
+                cs="VERIFY";
+            }
+            else if(c.state=== "presentation_received" && rejected){
+                cs="REJECTED";
+            }else if(c.state=== "verified"){
+                cs="VERIFIED";
+            }
             return(
-                <Grid item xs={6} md={4} key={index} 
-                        onClick={()=>{
-                          setCredentialData(c.presentation_request.name);
-                          setShowCredentialDialog(true);
-                        //   setFetchedCertificateType(c.type);
-                        }
-                        }>
+                <Grid item xs={6} md={4} key={index}>
                     <div className="certificate-container">
                     <Grid
                         container
@@ -146,6 +141,7 @@ const RequestCredentials = (props) => {
                             <div className="image-container">
                                 {setProfilePic(c.presentation_request.name)}
                             </div>
+                            
                         </Grid>
                         <Grid item xs={6} md={9}>
                             <Grid
@@ -163,29 +159,50 @@ const RequestCredentials = (props) => {
                                         {`Requested on: ${moment(c.date).format("MMMM Do YYYY")}`}
                                     </div>
                                 </Grid>
-                                <Grid item xs={12} md={12}>
+                                <Grid item xs={12} md={6}>
+                                    <Button 
+                                        onClick={()=>{
+                                            setAcceptedData(obj);
+                                            setCredentialRequestType(c.presentation_request.name);
+                                            setShowCredentialDialog(true);
+                                            setCredentialState(cs);
+                                            setExchangeId(c.presentation_exchange_id);
+                                        }}>
+                                        VIEW CREDENTIALS
+                                    </Button>
+                                </Grid>
+                                <Grid item xs={12} md={6}>
                                     {c.state=== "request_sent" ? 
                                     <Button variant="contained"
-                                        color="secondary"
+                                        className={"pending-button"}
                                     >
                                         PENDING
                                     </Button>
                                     :
-                                    c.state=== "request_received" ?
+                                    c.state=== "presentation_received" && !rejected ?
                                         <Button variant="contained"
                                             onClick={() => {
-                                                setShowCredentialDialog(false);
-                                                setCredentialDataByAgent({});
+                                                setCredentialRequestType(c.presentation_request.name);
+                                                dispatch(loader(true));
+                                                dispatch(verifyCredentials({credential_exchange_id:c.presentation_exchange_id}))
                                             }}
                                         >
-                                            VERFIY
+                                            VERIFY
+                                        </Button>
+                                    :
+                                    c.state=== "presentation_received" && rejected ?
+                                        <Button variant="contained"
+                                            className={"rejected-button"}
+                                            color="secondary"
+                                        >
+                                            REJECTED
                                         </Button>
                                     :
                                         c.state=== "verified" ?
                                             <Button variant="contained"
                                                 className={"verified-button"}
                                             >
-                                                VERFIED
+                                                VERIFIED
                                             </Button>
                                     : null
                                     }
@@ -198,6 +215,24 @@ const RequestCredentials = (props) => {
             )
         })
       }
+    const showRequestedCredentials = () => {
+        let highlight = false;
+        let highlightColor = "white";
+        if(credentialState === "VERIFY"){
+            highlight = true;
+            highlightColor = "yellow"
+        }
+        if(credentialState === "VERIFIED"){
+            highlight = true;
+            highlightColor = "white"
+        }
+        switch(credentialRequestType){
+                case "Proof of Health" : return <Covid readFrom={acceptedData} highlight={highlight} highlightColor={highlightColor}/>;
+                case "Proof of Education" : return <Degree readFrom={acceptedData}  highlight={highlight} highlightColor={highlightColor}/>;
+                case "Proof of Employment" : return <Experience readFrom={acceptedData}  highlight={highlight} highlightColor={highlightColor}/>;
+                default : return null;
+        }
+    }
     return (
       <React.Fragment>
         {errorMessage && <Alert severity="error">{errorMessage}</Alert>}
@@ -227,18 +262,41 @@ const RequestCredentials = (props) => {
                 >
                     <DialogContent>
                         <DialogContentText id="alert-dialog-description">
-                            {/* {showRequestedCredentials()} */}
+                            {credentialState==="VERIFY" &&
+                                <div style={{color:"black",background:"yellow",display:"flex",alignItems:"center",justifyContent:"center",padding:8}}>
+                                  <ErrorOutlineIcon/> <div>NOT VERIFIED</div> 
+                                </div>
+                            }
+                            {credentialState==="VERIFIED" &&
+                                <div style={{color:"black",background:"lightgreen",display:"flex",alignItems:"center",justifyContent:"center",padding:8}}>
+                                  <CheckCircleOutlineIcon/> <div>VERIFIED</div> 
+                                </div>
+                            }
+                            {showRequestedCredentials()}
                         </DialogContentText>
+                        
                     </DialogContent>
                     <DialogActions>
                         <Button variant="contained"
                             onClick={() => {
                                 setShowCredentialDialog(false);
-                                setCredentialDataByAgent({});
                               }
                             }>
-                            Close
+                            CLOSE
                         </Button>
+                        {credentialState==="VERIFY" ?
+                        <Button variant="contained"
+                            onClick={() => {
+                                dispatch(loader(true));
+                                dispatch(verifyCredentials({credential_exchange_id:exchangeId}))
+                                setShowCredentialDialog(false);
+                            }
+                            }>
+                            VERIFY
+                        </Button>
+                        :
+                        null
+                        }
                     </DialogActions>
                 </Dialog>
       </React.Fragment>

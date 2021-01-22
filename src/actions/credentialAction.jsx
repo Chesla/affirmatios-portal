@@ -62,7 +62,7 @@ export const getAllCredentials = () => {
             payload: {
                 errorMessage:'',
                 certificates:[...nonAcceptedCertificates, ...acceptedCertificates],
-                mapCredDEFToReferent:{}
+                mapCredDEFToReferent:mapCredDEFToReferent
             }
           });
       }).catch(() => {
@@ -213,7 +213,7 @@ export const issueCredential = (param) => {
   };
 }
 
-export const initCredentialsDetails = (connectionVerified,errorMessage) => {
+export const initCredentialsDetails = () => {
   return {
     type: Actions.INIT_CREDENTIALS,
     payload:{
@@ -222,16 +222,7 @@ export const initCredentialsDetails = (connectionVerified,errorMessage) => {
   };
 }
 
-//     data = {
-//       name: " Chesla Kar",
-//       role: " Software Engineer",
-//       joining_date:" 06/16/2014",
-//       relieving_date:" 09/11/2015",
-//       type:certificateType,
-//       requestedOn: "10/10/2020"
-//     }
-
-export const getAlreadyRequestedCertificateDetails = (param) => {
+export const getAlreadyRequestedCertificateDetails = () => {
   return async function (dispatch) {
     let url = process.env.REACT_APP_BASE_URL+"/employer/presented-proofs";
     const response = await fetch(url, {
@@ -255,7 +246,8 @@ export const getAlreadyRequestedCertificateDetails = (param) => {
           dispatch({
             type:  Actions.CREDENTIALS_ALREADY_REQUESTED,
             payload: {
-              certificateAlreadyRequested:Object.values(requestedData||{}) ||[],
+              // certificateAlreadyRequested:Object.values(requestedData||{}) ||[],
+              certificateAlreadyRequested:data.results,
               errorMessage:""
             }
           });
@@ -331,6 +323,66 @@ export const requestCredentials = (param) => {
           successRequestMessage:false
         }
       });
+    }
+  };
+}
+
+export const verifyCredentials =  (param) => {
+  return async function (dispatch) {
+    let url = "http://localhost:9003/employer/verify";
+    const response = await fetch(url, {
+      method: "POST",
+      body:JSON.stringify(param)
+    });
+    dispatch({
+      type: Actions.LOADER,
+      payload:false
+    })
+    if (response.status === 200) {
+      const resp = response.json();
+      window.scroll(0, 0);
+      resp.then((data) => {
+        let req = data.presentation_request.requested_attributes;
+        let reveal = data.presentation.requested_proof.revealed_attrs;
+        let obj = {};
+        for(let i in reveal){
+          obj[req[i].name]= reveal[i].raw
+        }
+        dispatch({
+          type:  Actions.CREDENTIALS_VERIFY,
+          payload:{
+            verifiedCredentials:obj,
+            errorMessage:""
+          }
+        })
+        dispatch(getAlreadyRequestedCertificateDetails());
+      })
+      .catch(() => {
+        dispatch({
+          type:  Actions.CREDENTIALS_VERIFY,
+          payload: {
+            errorMessage:'Some error occured. Please try again later',
+            verifiedCredentials:{}
+          }
+        });
+      });
+    }else{
+      dispatch({
+        type:  Actions.CREDENTIALS_VERIFY,
+        payload: {
+          errorMessage:'Some error occured. Please try again later',
+          verifiedCredentials:{}
+        }
+      });
+    }
+  };
+}
+
+export const saveCredentialSchema = (params) => {
+  return {
+    type: Actions.SAVE_CREDENTIAL_SCHEMA,
+    payload:{
+      savedSchema: params,
     }
   };
 }

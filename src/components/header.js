@@ -66,6 +66,9 @@ const Header = (props) => {
           <Link to="/connections" className="nav-bar-items">
             <Typography variant="h6">Connections</Typography>
           </Link>
+          <Link to="/createSchema" className="nav-bar-items">
+            <Typography variant="h6">Credential Schema</Typography>
+          </Link>
           {process.env.REACT_APP_AGENT?.toLowerCase() === "people" ? (
             <Link to="/credentails" className="nav-bar-items">
               <Typography variant="h6">Credentials</Typography>

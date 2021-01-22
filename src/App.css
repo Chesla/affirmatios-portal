@@ -91,6 +91,10 @@ input:-webkit-autofill {
   cursor: pointer;
   font-weight: 600;
 }
+.textLeft{
+  text-align: left;
+
+}
 .login-page {
   background: #1c92d2;  /* fallback for old browsers */
   background: -webkit-linear-gradient(to top, #f2fcfe, #1c92d2);  /* Chrome 10-25, Safari 5.1-6 */
@@ -209,6 +213,15 @@ h1, h2{
 }
 .verified-button{
   background-color: green !important;
+  cursor: not-allowed !important;
+  width: 100%;
+}
+.pending-button{
+  background-color: orangered !important;
+  cursor: not-allowed !important;
+  width: 100%;
+}
+.rejected-button{
   cursor: not-allowed !important;
   width: 100%;
 }

@@ -51,7 +51,7 @@ const Header = (props) => {
       switch(type){
         case "medical" : return "Manipal Hospitals"
         case "school" : return "KIIT University"
-        case "business" : return "TCS"
+        case "business" : return "Walmart"
         default : return <AccountCircle />;
       }
   }
@@ -65,6 +65,9 @@ const Header = (props) => {
           </Link>
           <Link to="/connections" className="nav-bar-items">
             <Typography variant="h6">Connections</Typography>
+          </Link>
+          <Link to="/createSchema" className="nav-bar-items">
+            <Typography variant="h6">Credential Schema</Typography>
           </Link>
           {process.env.REACT_APP_AGENT?.toLowerCase() === "people" ? (
             <Link to="/credentails" className="nav-bar-items">

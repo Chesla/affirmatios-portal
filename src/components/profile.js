@@ -13,6 +13,8 @@ import PersonIcon from '@material-ui/icons/Person';
 import KIIT from "../images/kiitlogo.png";
 import Manipal from "../images/manipallogo.jpeg";
 import TCS from "../images/tcslogo.png";
+import Walmart from "../images/walmart.png";
+
 
 import {
   loginUser,
@@ -49,7 +51,7 @@ const Profile = (props) => {
         case "people" : return <PersonIcon style={{ fontSize: 200 }}/>
         case "medical" : return <img src={Manipal} width={230} height={160} alt="Manipal Hospitals"/>
         case "school" : return <img src={KIIT} width={230} height={160} alt="KIIT University"/>
-        case "business" : return <img src={TCS} width={230} height={160} alt="TCS"/>
+        case "business" : return <img src={Walmart} width={230} height={160} alt="Walmart"/>
         default : return null;
       }
   }
@@ -58,7 +60,7 @@ const Profile = (props) => {
       switch(type){
         case "medical" : return "Manipal Hospitals"
         case "school" : return "KIIT University"
-        case "business" : return "TCS"
+        case "business" : return "Walmart"
         default : return profileInfo.firstLastName;
       }
   }

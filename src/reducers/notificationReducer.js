@@ -4,7 +4,7 @@ import * as Actions from "../actions";
 const INITIAL_STATE = {
     notifications:null,
     errorMessage:"",
-    notificationAction:false
+    notificationActionMsg:false
 };
 const notificationReducer = (state = INITIAL_STATE, action) => {
     switch (action.type) {
@@ -21,7 +21,7 @@ const notificationReducer = (state = INITIAL_STATE, action) => {
             return {
                 ...state,
                 errorMessage:payload.errorMessage|| "",
-                notificationAction:payload.notificationAction||[]
+                notificationActionMsg:payload.notificationActionMsg||false
             }
         }
         default : {

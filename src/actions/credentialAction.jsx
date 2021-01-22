@@ -30,6 +30,7 @@ export const getAllCredentials = () => {
             }
           });
         }
+        let mapCredDEFToReferent = {};
         acceptedCertificates = values[1].results?.map((r)=>{
             let acceptedCertificate = {};
             let type = getType(r.schema_id || "");
@@ -40,6 +41,7 @@ export const getAllCredentials = () => {
             acceptedCertificate["accept"] = true;
             acceptedCertificate["id"] = r.referent;
             acceptedCertificate["certificateDetails"] = r.attrs;
+            mapCredDEFToReferent[r.cred_def_id] = r.referent;
             return acceptedCertificate;
           })
           nonAcceptedCertificates = values[0].results?.map((r)=>{
@@ -59,7 +61,8 @@ export const getAllCredentials = () => {
             type: Actions.GET_ALL_CREDENTIALS,
             payload: {
                 errorMessage:'',
-                certificates:[...nonAcceptedCertificates, ...acceptedCertificates]
+                certificates:[...nonAcceptedCertificates, ...acceptedCertificates],
+                mapCredDEFToReferent:mapCredDEFToReferent
             }
           });
       }).catch(() => {
@@ -67,7 +70,8 @@ export const getAllCredentials = () => {
           type:  Actions.GET_ALL_CREDENTIALS,
           payload: {
             errorMessage:'Some error occured. Please try again later',
-            certificates:[]
+            certificates:[],
+            mapCredDEFToReferent:{}
           }
         });
       });
@@ -209,7 +213,7 @@ export const issueCredential = (param) => {
   };
 }
 
-export const initCredentialsDetails = (connectionVerified,errorMessage) => {
+export const initCredentialsDetails = () => {
   return {
     type: Actions.INIT_CREDENTIALS,
     payload:{
@@ -217,83 +221,77 @@ export const initCredentialsDetails = (connectionVerified,errorMessage) => {
     }
   };
 }
-const partialCredentialsData = (certificateType) => {
-  let data = {};
-  if(certificateType?.toLowerCase() === "business"){
-    data = {
-      name: " Chesla Kar",
-      designation: " Software Engineer",
-      doj:" 06/16/2014",
-      dol:" 09/11/2015",
-      type:certificateType,
-      requestedOn: "10/10/2020"
-    }
-  }else if(certificateType?.toLowerCase() === "medical"){
-    data = {
-      name:"Chesla Kar",
-      sex:"F",
-      age:"27",
-      address:"Bangalore, Karnataka",
-      place:"Bangalore",
-      date:"12th Nov 2020",
-      type:"medical",
-      requestedOn: "12/12/2020"
-    }
-  } else {
-    data = {
-      department:"Computer Science Engineering",
-      name:"Chesla Kar",
-      roll_number:"1005042",
-      completed_date:"month of May 2014",
-      address:"Bhubaneswar",
-      issued_date:"26th May 2014",
-      type:"school",
-      requestedOn: "10/12/2020"
-    }
-  }
-  return data;
-}
-export const getAlreadyRequestedCertificateDetails = (param) => {
-  return function (dispatch) {
+
+export const getAlreadyRequestedCertificateDetails = () => {
+  return async function (dispatch) {
+    let url = process.env.REACT_APP_BASE_URL+"/employer/presented-proofs";
+    const response = await fetch(url, {
+      method: "GET",
+    });
     dispatch({
       type: Actions.LOADER,
       payload:false
     })
-    let actionType = true;
-    if(actionType){
+    if (response.status === 200) {
+      const resp = response.json();
+      resp.then((data) => {
+        if (response.status === 200) {
+          let requestedData = {};
+          data.results?.map((r)=>{
+            if(!requestedData[r.presentation_request.name]){
+              requestedData[r.presentation_request.name] = r;
+            }
+            return r;
+          })
+          dispatch({
+            type:  Actions.CREDENTIALS_ALREADY_REQUESTED,
+            payload: {
+              // certificateAlreadyRequested:Object.values(requestedData||{}) ||[],
+              certificateAlreadyRequested:data.results,
+              errorMessage:""
+            }
+          });
+        } else {
+          dispatch({
+            type:  Actions.CREDENTIALS_ALREADY_REQUESTED,
+            payload: {
+              certificateAlreadyRequested: [],
+              errorMessage:"Some error occured. Please try again later",
+            }
+          });
+        }
+      })
+      .catch(() => {
         dispatch({
           type:  Actions.CREDENTIALS_ALREADY_REQUESTED,
-          payload:{
-            certificateAlreadyRequested:[partialCredentialsData("business"),partialCredentialsData("medical"),partialCredentialsData("school")],
-            errorMessage:""
-          }
-        })
-    }else{
-      if(actionType){
-        dispatch({
-          type:  Actions.CREDENTIALS_ALREADY_REQUESTED,
-          payload:{
+          payload: {
             certificateAlreadyRequested: [],
             errorMessage:"Some error occured. Please try again later",
           }
-        })
-      }
+        });
+      });
     }
-  }
+  };
 }
 
 export const requestCredentials = (param) => {
-  return function (dispatch) {
+  return async function (dispatch) {
+    let url = process.env.REACT_APP_BASE_URL+"/employer/request-proof";
+    const response = await fetch(url, {
+      method: "POST",
+      body:JSON.stringify(param)
+    });
     dispatch({
       type: Actions.LOADER,
       payload:false
     })
-    let actionType = true;
-    if(actionType){
+    if (response.status === 200) {
+      const resp = response.json();
+      window.scroll(0, 0);
+      resp.then((data) => {
         dispatch({
           type:  Actions.CREDENTIALS_REQUESTED,
           payload:{
-            credentialRequested:param,
             successRequestMessage:true,
             errorMessage:""
           }
@@ -302,23 +300,89 @@ export const requestCredentials = (param) => {
           dispatch({
             type:  Actions.CREDENTIALS_REQUESTED,
             payload:{
-              credentialRequested:param,
               successRequestMessage:false,
               errorMessage:""
             }
           })
         },1000)
-    }else{
-      if(actionType){
+      })
+      .catch(() => {
         dispatch({
           type:  Actions.CREDENTIALS_REQUESTED,
+          payload: {
+            errorMessage:'Some error occured. Please try again later',
+            successRequestMessage:false
+          }
+        });
+      });
+    }else{
+      dispatch({
+        type:  Actions.CREDENTIALS_REQUESTED,
+        payload: {
+          errorMessage:'Some error occured. Please try again later',
+          successRequestMessage:false
+        }
+      });
+    }
+  };
+}
+
+export const verifyCredentials =  (param) => {
+  return async function (dispatch) {
+    let url = "http://localhost:9003/employer/verify";
+    const response = await fetch(url, {
+      method: "POST",
+      body:JSON.stringify(param)
+    });
+    dispatch({
+      type: Actions.LOADER,
+      payload:false
+    })
+    if (response.status === 200) {
+      const resp = response.json();
+      window.scroll(0, 0);
+      resp.then((data) => {
+        let req = data.presentation_request.requested_attributes;
+        let reveal = data.presentation.requested_proof.revealed_attrs;
+        let obj = {};
+        for(let i in reveal){
+          obj[req[i].name]= reveal[i].raw
+        }
+        dispatch({
+          type:  Actions.CREDENTIALS_VERIFY,
           payload:{
-            credentialRequested: [],
-            successRequestMessage:false,
-            errorMessage:"Some error occured. Please try again later",
+            verifiedCredentials:obj,
+            errorMessage:""
           }
         })
-      }
+        dispatch(getAlreadyRequestedCertificateDetails());
+      })
+      .catch(() => {
+        dispatch({
+          type:  Actions.CREDENTIALS_VERIFY,
+          payload: {
+            errorMessage:'Some error occured. Please try again later',
+            verifiedCredentials:{}
+          }
+        });
+      });
+    }else{
+      dispatch({
+        type:  Actions.CREDENTIALS_VERIFY,
+        payload: {
+          errorMessage:'Some error occured. Please try again later',
+          verifiedCredentials:{}
+        }
+      });
     }
-  }
+  };
+}
+
+export const saveCredentialSchema = (params) => {
+  return {
+    type: Actions.SAVE_CREDENTIAL_SCHEMA,
+    payload:{
+      savedSchema: params,
+    }
+  };
 }

@@ -62,7 +62,7 @@ const RequestNewCredentails = (props) => {
         }
     }
     const credentails = {
-        "degree" : {
+        "Degree" : {
             params:[
                 {id : "name", name : " Name"},
                 {id : "roll_number", name : " Registartion Number"}, 
@@ -85,7 +85,7 @@ const RequestNewCredentails = (props) => {
                 {id :"issuedOn" , name : "Issued On"}
             ]
         },
-        "medical":{
+        "Hospital":{
             params:[
                 {id :"name" , name: "Name"},
                 {id :"sex" , name: "Sex"},
@@ -152,13 +152,13 @@ const RequestNewCredentails = (props) => {
                         }}
                         label="Certificate Type"
                     >
-                        <MenuItem value={"degree"}>
+                        <MenuItem value={"Degree"}>
                                 {"Provisional Certificate"}
                         </MenuItem>
-                        <MenuItem value={"medical"}>
+                        <MenuItem value={"Hospital"}>
                                 {"Covid Certificate"}
                         </MenuItem>
-                        <MenuItem value={"experience"}>
+                        <MenuItem value={"employeer"}>
                                 {"Experience Certificate"}
                         </MenuItem>
                     </Select>
@@ -190,49 +190,11 @@ const RequestNewCredentails = (props) => {
         )
     }
     const requestParams = () => {
-        if(paramsSelected.length && !!certificateType && !!connectionName){
-            let certificate = certificateType; 
-            let credentialRequestedParam = credentialRequested || {};
-            let id = connectionName.connection_id;
-            id="people";
-            if(credentialRequestedParam){
-                if(credentialRequestedParam[id]){
-                    let check = false;
-                    for(let i=0; i<credentialRequestedParam[id].length; i++){
-                        const identity = credentialRequestedParam[id][i];
-                        if(identity.certificateType === certificate){
-                            check = true;
-                            identity.params = paramsSelected;
-                            credentialRequestedParam[id][i] = identity
-                        }
-                    }   
-                    if(!check){
-                        credentialRequestedParam[id].push({[certificate]:{
-                            certificateType:certificate,
-                            params:paramsSelected
-                        }});
-                    }
-                }else{
-                    credentialRequestedParam = {};
-                    credentialRequestedParam[id]=[
-                        {[certificateType]:{
-                            certificateType:certificate,
-                            params:paramsSelected
-                        }}
-                    ]
-                }
-            }
-            else{
-                credentialRequestedParam[id]=[
-                    {[certificateType]:{
-                        certificateType:certificate,
-                        params:paramsSelected
-                    }}
-                ]
-            }
-            console.log("people",credentialRequestedParam);
-            dispatch(requestCredentials(credentialRequestedParam));
-        }
+        let data = {
+            connection_id:connectionName.connection_id,
+            record_type:certificateType,
+        };
+        dispatch(requestCredentials(data));
     }
     const checkRequest = () => {
         if(paramsSelected.length && !!certificateType && !!connectionName){
@@ -258,7 +220,7 @@ const RequestNewCredentails = (props) => {
     return (
       <div className="degree-grid-form">
         {errorMessage && <Alert severity="error">{errorMessage}</Alert>}
-        {successRequestMessage && <Alert severity="success">{"Request sent successfully"}</Alert>}
+        {successRequestMessage && <Alert severity="success">{"Credentials Request sent successfully"}</Alert>}
         <Card className={"mgTop10"}>
           <CardHeader className={"mgleft10"} title={"Request Credentials"}/>
           <CardContent>

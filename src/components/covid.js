@@ -68,10 +68,16 @@ const Covid = (props) => {
             style={{textAlign:"left"}}
           >
              <Grid item xs={12} md={12} className={"Covid-certificate-details"}>
-                 This is to certify that <b>{covidLetter.name || "NA"}</b> <br/>
-                 Sex <b>{covidLetter.sex ? covidLetter.sex==="F" ? "female" : "male" : "NA" }</b>, 
-                 Age <b>{covidLetter.age || "NA"}yrs.</b>,
-                 Residing at <b>{covidLetter.address || "NA"}</b> <br/>
+                 This is to certify that 
+                   <b style={{background:`${covidLetter.name && props.highlight ? props.highlightColor : "white"}`}}>
+                      {covidLetter.name || "NA"}
+                   </b> <br/>
+                 Sex <b style={{background:`${covidLetter.sex && props.highlight ? props.highlightColor : "white"}`}}>
+                    {covidLetter.sex ? covidLetter.sex==="F" ? "female" : "male" : "NA" }</b>, 
+                 Age <b style={{background:`${covidLetter.age && props.highlight ? props.highlightColor : "white"}`}}>
+                   {covidLetter.age || "NA"}yrs.</b>,
+                 Residing at <b style={{background:`${covidLetter.address && props.highlight ? props.highlightColor : "white"}`}}>
+                   {covidLetter.address || "NA"}</b> <br/>
                  is healthy and not suffering from COVID-19.
              </Grid>
              
@@ -92,10 +98,10 @@ const Covid = (props) => {
                           style={{textAlign:"left"}}
                       >
                           <Grid item xs={12} md={12}>
-                              Place: <b>{covidLetter.place || "NA"}</b>
+                              Place: <b style={{background:`${covidLetter.place && props.highlight ? props.highlightColor : "white"}`}}>{covidLetter.place || "NA"}</b>
                           </Grid>
                           <Grid item xs={12} md={12}>
-                              Date: <b>{covidLetter.date || "NA"}</b>
+                              Date: <b style={{background:`${covidLetter.date && props.highlight ? props.highlightColor : "white"}`}}>{covidLetter.date || "NA"}</b>
                           </Grid>
                       </Grid>
                   </Grid>
@@ -127,4 +133,7 @@ export default Covid;
 
 Covid.propTypes = {
   readFrom: PropTypes.any,
+  highlight: PropTypes.any,
+  highlightColor: PropTypes.any
+
 };

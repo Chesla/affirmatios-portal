@@ -9,6 +9,7 @@ import Connections from './connections';
 import IssueCredentials from "./issueCredentials";
 import RequestCredentials from "./requestCredentials";
 import RequestNewCredentials from "./requestNewCredentials";
+import SchemaCredentials from "./schemaCredentials";
 import {
   Route,
 } from "react-router-dom";
@@ -24,6 +25,7 @@ const HomePage = (props) => {
       <Route exact path="/issuecredentails" component={IssueCredentials} />
       <Route exact path="/credentails/:id/:type" component={Certificate} />
       <Route exact path="/requestcredentials" component={RequestNewCredentials} />
+      <Route exact path="/createSchema" component={SchemaCredentials} />
       <Route exact path="/requestCredentials/:identity/:name" component={RequestCredentials} />
     </div>
   );

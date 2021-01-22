@@ -6,12 +6,7 @@ import {
     Grid,
     CardActions,
     Button,
-    FormControl,
-    InputLabel,
-    Select,
-    MenuItem,
-    FormHelperText,
-    TextField
+   TextField
 } from "@material-ui/core";
 import React, {useState} from "react";
 import TCS from "../images/tcslogo.png";
@@ -19,38 +14,22 @@ import PropTypes from "prop-types";
 
 const ExperienceForm = (props) => {
     const [experienceParam ,setExperienceParam] = useState({
-        ownerName: props.profileName,
-        verificationId:"",
-        certificateName:"",
-        name:props.connectionName,
-        designation:"",
-        department:"",
-        doj:"",
-        dol:"",
-        gender:"",
-        reason:"",
-        remarks:"",
-        location:"",
-        issuedOn:"",
-        issuedBy:"",
-        issuedByTeam:""
+        "name": props.connectionName,
+        "employee_id": "",
+        "joining_date": "",
+        "department": "",
+        "role": "",
+        "issued_date": "",
+        "relieving_date": ""
     })
     const [experienceParamError ,setExperienceParamError] = useState({
-        ownerName: false,
-        verificationId:false,
-        certificateName:false,
-        name:false,
-        designation:false,
-        department:false,
-        doj:false,
-        dol:false,
-        gender:false,
-        reason:false,
-        remarks:false,
-        location:false,
-        issuedOn:false,
-        issuedBy:false,
-        issuedByTeam:false
+        "name": false,
+        "employee_id": false,
+        "joining_date": false,
+        "department": false,
+        "role": false,
+        "issued_date": false,
+        "relieving_date": false
     })
     const setExperienceCredentials = (e) => {
         setExperienceParam({ ...experienceParam, ...{ [e.target.name]: e.target.value } });
@@ -87,14 +66,14 @@ const ExperienceForm = (props) => {
             >
                <Grid item xs={6} md={4}>
                     <TextField 
-                        id="verificationId" 
-                        name="verificationId"
-                        value={experienceParam.verificationId}
+                        id="employee_id" 
+                        name="employee_id"
+                        value={experienceParam.employee_id}
                         onChange={setExperienceCredentials}
                         placeholder={"eg: TCS/EMP/834930"}
-                        error={experienceParamError.verificationId}
+                        error={experienceParamError.employee_id}
                         helperText={
-                            experienceParamError.verificationId ? "Please enter employee no." : ""
+                            experienceParamError.employee_id ? "Please enter employee no." : ""
                         }/> 
                </Grid>
             </Grid>
@@ -107,16 +86,7 @@ const ExperienceForm = (props) => {
                <Grid item xs={12} md={12}>
                <Grid item xs={12} md={12} >
                     <div className={"degree-certificate-name"}>
-                        <TextField 
-                            id="certificateName" 
-                            name="certificateName"
-                            onChange={setExperienceCredentials}
-                            value={experienceParam.certificateName}
-                            error={experienceParamError.certificateName}
-                            helperText={
-                                experienceParamError.certificateName ? "Please enter certificate name." : ""
-                            }
-                            placeholder={"eg: Service Certificate"}/>
+                        <b> {"SERVICE CERTIFICATE"} </b>
                     </div>
                </Grid>
                </Grid>
@@ -129,23 +99,7 @@ const ExperienceForm = (props) => {
               style={{textAlign:"left"}}
             >
                <Grid item xs={12} md={12}>
-                   This is to certify that <b>{props.connectionName}</b> was employed by us and 
-                   <FormControl>
-                        <InputLabel id="demo-gender-label">Gender</InputLabel>
-                            <Select
-                                labelId="demo-gender-label"
-                                id="gender"
-                                name="gender"
-                                value={experienceParam.gender}
-                                onChange={setExperienceCredentials}
-                                >
-                                <MenuItem value={"M"}>Male</MenuItem>
-                                <MenuItem value={"F"}>Female</MenuItem>
-                            </Select>
-                    </FormControl>
-                   {experienceParamError.gender && <FormHelperText>Please select gender.</FormHelperText>}
-                   {experienceParam.gender==="F" ? " her " : " his "} 
-                   particulars of service are as under:
+                   This is to certify that <b>{props.connectionName}</b> was employed by us  
                </Grid>
                <Grid item xs={12} md={12}>
                     <Grid
@@ -174,13 +128,13 @@ const ExperienceForm = (props) => {
                             </Grid> 
                             <Grid item xs={6} md={8}>
                                 <TextField 
-                                    id="designation" 
-                                    name="designation"
+                                    id="role" 
+                                    name="role"
                                     onChange={setExperienceCredentials}
-                                    value={experienceParam.designation}
-                                    error={experienceParamError.designation}
+                                    value={experienceParam.role}
+                                    error={experienceParamError.role}
                                     helperText={
-                                        experienceParamError.designation ? "Please enter designation." : ""
+                                        experienceParamError.role ? "Please enter designation." : ""
                                     }
                                     placeholder={"eg: CSIS"}/>
                             </Grid> 
@@ -222,13 +176,13 @@ const ExperienceForm = (props) => {
                             </Grid> 
                             <Grid item xs={6} md={8}>
                                 <TextField 
-                                    id="doj" 
-                                    name="doj"
+                                    id="joining_date" 
+                                    name="joining_date"
                                     onChange={setExperienceCredentials}
-                                    value={experienceParam.doj}
-                                    error={experienceParamError.doj}
+                                    value={experienceParam.joining_date}
+                                    error={experienceParamError.joining_date}
                                     helperText={
-                                        experienceParamError.doj ? "Please enter date of joining." : ""
+                                        experienceParamError.joining_date ? "Please enter date of joining." : ""
                                     }
                                     placeholder={"eg: 06/16/2014"}/>
                             </Grid> 
@@ -246,13 +200,13 @@ const ExperienceForm = (props) => {
                             </Grid> 
                             <Grid item xs={6} md={8}>
                                 <TextField 
-                                    id="dol" 
-                                    name="dol"
+                                    id="relieving_date" 
+                                    name="relieving_date"
                                     onChange={setExperienceCredentials}
-                                    value={experienceParam.dol}
-                                    error={experienceParamError.dol}
+                                    value={experienceParam.relieving_date}
+                                    error={experienceParamError.relieving_date}
                                     helperText={
-                                        experienceParamError.dol ? "Please enter date of leaving." : ""
+                                        experienceParamError.relieving_date ? "Please enter date of leaving." : ""
                                     }
                                     placeholder={"eg: 09/11/2015"}/>
                             </Grid> 
@@ -268,17 +222,8 @@ const ExperienceForm = (props) => {
                            <Grid item xs={6} md={4}>
                                6. Reason of Leaving
                             </Grid> 
-                            <Grid item xs={6} md={8}>
-                                <TextField 
-                                    id="reason" 
-                                    name="reason"
-                                    onChange={setExperienceCredentials}
-                                    value={experienceParam.reason}
-                                    error={experienceParamError.reason}
-                                    helperText={
-                                        experienceParamError.reason ? "Please enter reason." : ""
-                                    }
-                                    placeholder={"eg: Resigned"}/>
+                            <Grid item xs={6} md={4}>
+                                <b>:{"Resigned"}</b>
                             </Grid> 
                     </Grid>
                </Grid>
@@ -292,18 +237,9 @@ const ExperienceForm = (props) => {
                            <Grid item xs={6} md={4}>
                                7. Remarks
                             </Grid> 
-                            <Grid item xs={6} md={8}>
-                                <TextField 
-                                    id="remarks" 
-                                    name="remarks"
-                                    onChange={setExperienceCredentials}
-                                    value={experienceParam.remarks}
-                                    error={experienceParamError.remarks}
-                                    helperText={
-                                        experienceParamError.remarks ? "Please enter remarks." : ""
-                                    }
-                                    placeholder={"eg: Remarks"}/>
-                            </Grid> 
+                            <Grid item xs={6} md={4}>
+                                <b>:{"-"}</b>
+                            </Grid>
                     </Grid>
                </Grid>
                <Grid item xs={12} md={12}>
@@ -318,14 +254,14 @@ const ExperienceForm = (props) => {
                         </Grid> 
                         <Grid item xs={6} md={8}>
                          <TextField 
-                                id="issuedOn" 
-                                name="issuedOn"
-                                value={experienceParam.issuedOn}
+                                id="issued_date" 
+                                name="issued_date"
+                                value={experienceParam.issued_date}
                                 onChange={setExperienceCredentials}
                                 placeholder={"eg: 12/14/2020"}
-                                error={experienceParamError.issuedOn}
+                                error={experienceParamError.issued_date}
                                 helperText={
-                                    experienceParamError.issuedOn ? "Please enter issued on date." : ""
+                                    experienceParamError.issued_date ? "Please enter issued on date." : ""
                                 }/>
                     </Grid> 
                     </Grid>
@@ -338,38 +274,12 @@ const ExperienceForm = (props) => {
               alignItems="center"
               style={{textAlign:"right"}}
             >
-               <Grid item xs={6} md={4}>
-                    <TextField 
-                            id="issuedBy" 
-                            name="issuedBy"
-                            value={experienceParam.issuedBy}
-                            onChange={setExperienceCredentials}
-                            placeholder={"Issuer name"}
-                            error={experienceParamError.issuedBy}
-                            helperText={
-                                experienceParamError.issuedBy ? "Please enter issuer name." : ""
-                            }/>
-                </Grid>
-            </Grid>
-            <Grid
-              container
-              spacing={2}
-              justify="flex-end"
-              alignItems="center"
-              style={{textAlign:"right"}}
-            >
-                <Grid item xs={6} md={4}>
-                    <TextField 
-                            id="issuedByTeam" 
-                            name="issuedByTeam"
-                            value={experienceParam.issuedByTeam}
-                            onChange={setExperienceCredentials}
-                            placeholder={"Issuer department"}
-                            error={experienceParamError.issuedByTeam}
-                            helperText={
-                                experienceParamError.issuedByTeam ? "Please enter issuer department." : ""
-                            }/>
-                </Grid>
+               <Grid item xs={12} md={12}>
+                {"Ritu Kumar"}
+               </Grid>
+               <Grid item xs={12} md={12}>
+                  {"Recruitment Head"}
+               </Grid>
             </Grid>
           </CardContent>
           <CardActions>

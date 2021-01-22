@@ -48,7 +48,7 @@ const Experience = (props) => {
               style={{textAlign:"right"}}
             >
                <Grid item xs={12} md={12}>
-                   <b>{experienceLetter.verificationId || "NA"}</b>
+                   <b>{experienceLetter.employee_id || "NA"}</b>
                </Grid>
             </Grid>
             <Grid
@@ -71,7 +71,7 @@ const Experience = (props) => {
               style={{textAlign:"left"}}
             >
                <Grid item xs={12} md={12}>
-                   This is to certify that <b>{experienceLetter.name || "NA"}</b> was employed by us and {experienceLetter.gender==="F" ? "her" : "his"} particulars of service are as under:
+                   This is to certify that <b>{experienceLetter.name || "NA"}</b> was employed by us
                </Grid>
                <Grid item xs={12} md={12}>
                     <Grid
@@ -84,7 +84,7 @@ const Experience = (props) => {
                                1. Name
                             </Grid> 
                             <Grid item xs={6} md={4}>
-                                <b>:{experienceLetter.gender==="F" ? " Ms." : " Mr."} {experienceLetter.name || "NA"}</b>
+                                <b>:{experienceLetter.name || "NA"}</b>
                             </Grid> 
                     </Grid>
                </Grid>
@@ -99,7 +99,7 @@ const Experience = (props) => {
                                2. Designation
                             </Grid> 
                             <Grid item xs={6} md={4}>
-                                <b>:{experienceLetter.designation || "NA"}</b> 
+                                <b>:{experienceLetter.role || "NA"}</b> 
                             </Grid> 
                     </Grid>
                </Grid>
@@ -114,7 +114,7 @@ const Experience = (props) => {
                                3. Department
                             </Grid> 
                             <Grid item xs={6} md={4}>
-                                <b>:{experienceLetter.department || "NA"}</b>
+                                <b>:{experienceLetter.department}</b>
                             </Grid> 
                     </Grid>
                </Grid>
@@ -129,7 +129,7 @@ const Experience = (props) => {
                                4. Date of Joining
                             </Grid> 
                             <Grid item xs={6} md={4}>
-                                <b>:{experienceLetter.doj || "NA"}</b>
+                                <b>:{experienceLetter.joining_date || "NA"}</b>
                             </Grid> 
                     </Grid>
                </Grid>
@@ -144,7 +144,7 @@ const Experience = (props) => {
                                5. Date of Leaving
                             </Grid> 
                             <Grid item xs={6} md={4}>
-                                <b>:{experienceLetter.dol || "NA"}</b>
+                                <b>:{experienceLetter.relieving_date || "NA"}</b>
                             </Grid> 
                     </Grid>
                </Grid>
@@ -159,7 +159,7 @@ const Experience = (props) => {
                                6. Reason of Leaving
                             </Grid> 
                             <Grid item xs={6} md={4}>
-                                <b>:{experienceLetter.reason || "NA"}</b>
+                                <b>:{"Resigned"}</b>
                             </Grid> 
                     </Grid>
                </Grid>
@@ -174,12 +174,12 @@ const Experience = (props) => {
                                7. Remarks
                             </Grid> 
                             <Grid item xs={6} md={4}>
-                                <b>:{experienceLetter.remarks || "NA"}</b>
+                                <b>:{"-"}</b>
                             </Grid> 
                     </Grid>
                </Grid>
                <Grid item xs={12} md={12}>
-                   Dated: <b>{experienceLetter.issuedOn || "NA"}</b>
+                   Dated: <b>{experienceLetter.issued_date || "NA"}</b>
                </Grid>
             </Grid>
             <Grid
@@ -207,4 +207,5 @@ export default Experience;
 
 Experience.propTypes = {
     readFrom: PropTypes.any,
-  };
+    highlight: PropTypes.any
+};

@@ -1,3 +1,21 @@
+To get started with the project.  Create an env file to run the code
+SET two varibales REACT_APP_AGENT and REACT_APP_SCHEMA_AGENT and REACT_APP_BASE_URL
+
+For agent type school 
+  REACT_APP_AGENT = school
+  REACT_APP_SCHEMA_AGENT = university
+
+For agent type medical
+  REACT_APP_AGENT = medical
+  REACT_APP_SCHEMA_AGENT = hospital
+  
+For agent type people
+  REACT_APP_AGENT=people
+  REACT_APP_SCHEMA_AGENT=people
+
+For agent type busniess
+  REACT_APP_AGENT = busniess
+  REACT_APP_SCHEMA_AGENT = employeer
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).

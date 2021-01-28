@@ -22,7 +22,6 @@ export const loginUser = (data, actionType) => {
             roles:["verifier","holder"],
             email:"cheslakar@gmail.com",
             mobile:"+91 9591794442",
-            type:"people",
             agentType
           } 
         }else if(agentType === "medical"){
@@ -32,7 +31,6 @@ export const loginUser = (data, actionType) => {
             roles:["verifier","issuer"],
             email:"admin@manipalhospital.com",
             mobile:"+91 9591795442",
-            type:"people",
             agentType
           } 
         }else if(agentType === "school"){
@@ -42,17 +40,25 @@ export const loginUser = (data, actionType) => {
             roles:["verifier","issuer"],
             email:"kiit@gmail.com",
             mobile:"+91 9591780442",
-            type:"people",
             agentType
           } 
-        }else{
+        }else if(agentType === "first-business"){
+          profileInfo = {
+            DID: "QWETVFF",
+            firstLastName:"Walmart",
+            roles:["verifier","issuer"],
+            email:"tcs@gmail.com",
+            mobile:"+91 9591789442",
+            agentType
+          } 
+        }
+        else{
           profileInfo = {
             DID: "QWETVFF",
             firstLastName:"Walmart",
             roles:["verifier","issuer"],
             email:"admin@walmart.com",
             mobile:"+91 9591790478",
-            type:"people",
             agentType
           }
         }

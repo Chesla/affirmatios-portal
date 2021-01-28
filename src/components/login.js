@@ -118,6 +118,7 @@ const Login = (props) => {
             case "medical" : return "Medical";
             case "school" : return "School";
             case "business" : return "Business";
+            case "first-business" : return "Business";
             default : return null;
     }
   }

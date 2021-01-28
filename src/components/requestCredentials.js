@@ -48,6 +48,9 @@ const RequestCredentials = (props) => {
     const fetchRequestedCertificateDetails = () => {
         dispatch(loader(true));
         dispatch(getAlreadyRequestedCertificateDetails());
+        setInterval(()=>{
+            dispatch(getAlreadyRequestedCertificateDetails());
+        },4000);
     }
     const verifiedCredentials = useSelector(
         (state) => state.credential.verifiedCredentials
@@ -80,7 +83,6 @@ const RequestCredentials = (props) => {
     },[profileInfo]);
     useEffect(()=>{
         if(Object.keys(verifiedCredentials||{}).length !==0){
-            setShowCredentialDialog(true);
             setAcceptedData(verifiedCredentials);
         }
     },[verifiedCredentials])
@@ -159,6 +161,7 @@ const RequestCredentials = (props) => {
                                         {`Requested on: ${moment(c.date).format("MMMM Do YYYY")}`}
                                     </div>
                                 </Grid>
+                                { cs === "VERIFY" || cs === "VERIFIED" ?
                                 <Grid item xs={12} md={6}>
                                     <Button 
                                         onClick={()=>{
@@ -171,6 +174,7 @@ const RequestCredentials = (props) => {
                                         VIEW CREDENTIALS
                                     </Button>
                                 </Grid>
+                                : null}
                                 <Grid item xs={12} md={6}>
                                     {c.state=== "request_sent" ? 
                                     <Button variant="contained"

@@ -147,6 +147,8 @@ export const getType = (label) => {
     type = "medical";
   }else if(label && label.toLowerCase().includes("university")){
     type = "school";
+  }else if(label && label.toLowerCase().includes("employer")){
+    type = "business";
   }
   return type;
 }
@@ -156,8 +158,8 @@ export const setProfileName = (type) => {
   switch(type){
     case "medical" : return "Manipal Hospital"
     case "school" : return "KIIT UNIVERSITY"
-    case "business" : return "TCS"
-    case "person" : return "Chesla Kar"
+    case "business" : return "Walmart"
+    case "person" : return "Chesla"
     default : return null;
   }
 }

@@ -19,6 +19,7 @@ const Header = (props) => {
             case "medical" : return "secondary";
             case "school" : return "primary";
             case "business" : return "default";
+            case "first-business" : return "default";
             default : return "inherit";
     }
   }
@@ -34,6 +35,9 @@ const Header = (props) => {
             case "business" : return (<div className={"app-header-text"}>
                                         <span>{setProfilePic()}</span> Business
                                     </div>);
+            case "first-business" : return (<div className={"app-header-text"}>
+                                        <span>{setProfilePic()}</span> Business
+                                    </div>);
             default : return "Affirmatios";
     }
   }
@@ -43,6 +47,7 @@ const Header = (props) => {
         case "medical" : return <LocalHospitalIcon style={{ fontSize: 60 }}/>
         case "school" : return <SchoolIcon style={{ fontSize: 60 }}/>
         case "business" : return <BusinessIcon style={{ fontSize: 60 }}/>
+        case "first-business" : return <BusinessIcon style={{ fontSize: 60 }}/>
         default : return null;
       }
   }
@@ -52,6 +57,7 @@ const Header = (props) => {
         case "medical" : return "Manipal Hospitals"
         case "school" : return "KIIT University"
         case "business" : return "Walmart"
+        case "first-business" : return "TCS"
         default : return <AccountCircle />;
       }
   }
@@ -65,6 +71,9 @@ const Header = (props) => {
           </Link>
           <Link to="/connections" className="nav-bar-items">
             <Typography variant="h6">Connections</Typography>
+          </Link>
+          <Link to="/createSchema" className="nav-bar-items">
+            <Typography variant="h6">Credential Schema</Typography>
           </Link>
           {process.env.REACT_APP_AGENT?.toLowerCase() === "people" ? (
             <Link to="/credentails" className="nav-bar-items">

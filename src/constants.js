@@ -158,7 +158,7 @@ export const setProfileName = (type) => {
   switch(type){
     case "medical" : return "Manipal Hospital"
     case "school" : return "KIIT UNIVERSITY"
-    case "business" : return "WALMART"
+    case "business" : return "Walmart"
     case "person" : return "Chesla"
     default : return null;
   }

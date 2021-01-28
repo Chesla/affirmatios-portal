@@ -97,9 +97,9 @@ const Notifications = (props) => {
       }
       dispatch(loader(true));
       dispatch(actionOnNotification(type,obj,details.allData.presentation_exchange_id));
-     
   }
   const showNotifications = () => {
+    console.log("notifications",notifications);
     return (notifications||[]).map((n)=>{
         return(
             <Grid

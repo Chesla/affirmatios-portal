@@ -194,51 +194,7 @@ const RequestNewCredentails = (props) => {
             connection_id:connectionName.connection_id,
             record_type:certificateType,
         };
-        console.log("people",data);
         dispatch(requestCredentials(data));
-        // if(paramsSelected.length && !!certificateType && !!connectionName){
-        //     let certificate = certificateType; 
-        //     let credentialRequestedParam = credentialRequested || {};
-        //     let id = connectionName.connection_id;
-        //     id="people";
-        //     if(credentialRequestedParam){
-        //         if(credentialRequestedParam[id]){
-        //             let check = false;
-        //             for(let i=0; i<credentialRequestedParam[id].length; i++){
-        //                 const identity = credentialRequestedParam[id][i];
-        //                 if(identity.certificateType === certificate){
-        //                     check = true;
-        //                     identity.params = paramsSelected;
-        //                     credentialRequestedParam[id][i] = identity
-        //                 }
-        //             }   
-        //             if(!check){
-        //                 credentialRequestedParam[id].push({[certificate]:{
-        //                     certificateType:certificate,
-        //                     params:paramsSelected
-        //                 }});
-        //             }
-        //         }else{
-        //             credentialRequestedParam = {};
-        //             credentialRequestedParam[id]=[
-        //                 {[certificateType]:{
-        //                     certificateType:certificate,
-        //                     params:paramsSelected
-        //                 }}
-        //             ]
-        //         }
-        //     }
-        //     else{
-        //         credentialRequestedParam[id]=[
-        //             {[certificateType]:{
-        //                 certificateType:certificate,
-        //                 params:paramsSelected
-        //             }}
-        //         ]
-        //     }
-        //     console.log("people",credentialRequestedParam);
-        //     dispatch(requestCredentials(credentialRequestedParam));
-        // }
     }
     const checkRequest = () => {
         if(paramsSelected.length && !!certificateType && !!connectionName){

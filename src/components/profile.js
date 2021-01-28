@@ -52,6 +52,7 @@ const Profile = (props) => {
         case "medical" : return <img src={Manipal} width={230} height={160} alt="Manipal Hospitals"/>
         case "school" : return <img src={KIIT} width={230} height={160} alt="KIIT University"/>
         case "business" : return <img src={Walmart} width={230} height={160} alt="Walmart"/>
+        case "first-business" : return <img src={TCS} width={230} height={160} alt="TCS"/>
         default : return null;
       }
   }
@@ -61,6 +62,7 @@ const Profile = (props) => {
         case "medical" : return "Manipal Hospitals"
         case "school" : return "KIIT University"
         case "business" : return "Walmart"
+        case "first-business" : return "TCS"
         default : return profileInfo.firstLastName;
       }
   }

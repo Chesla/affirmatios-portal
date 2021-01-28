@@ -71,11 +71,23 @@ const Degree = (props) => {
               style={{textAlign:"left"}}
             >
                <Grid item xs={12} md={12} className={"degree-certificate-details"}>
-                   This is to certify that <b>{degreeLetter.name || "NA"}</b> <br/>
-                   bearing the Registration No. <b>{degreeLetter.roll_number || "NA"}</b> <br/>
-                   has successfully completed in the <b>{degreeLetter.completed_date || "NA"}</b> <br/>
+                   This is to certify that 
+                   <b style={{background:`${degreeLetter.name && props.highlight ? props.highlightColor : "white"}`}}>
+                       {degreeLetter.name || "NA"}
+                    </b> <br/>
+                   bearing the Registration No. 
+                    <b style={{background:`${degreeLetter.roll_number && props.highlight ? props.highlightColor : "white"}`}}>
+                        {degreeLetter.roll_number || "NA"}
+                    </b> <br/>
+                   has successfully completed in the 
+                    <b style={{background:`${degreeLetter.completed_date && props.highlight ? props.highlightColor : "white"}`}}>
+                        {degreeLetter.completed_date || "NA"}
+                    </b> <br/>
                    all the prescribed requirements under the regulations <br/>
-                   for the degree of <b>{degreeLetter.department || "NA"}</b>
+                   for the degree of 
+                    <b style={{background:`${degreeLetter.department && props.highlight ? props.highlightColor : "white"}`}}>
+                        {degreeLetter.department || "NA"}
+                    </b>
                </Grid>
                
             </Grid>
@@ -95,10 +107,15 @@ const Degree = (props) => {
                             style={{textAlign:"left"}}
                         >
                             <Grid item xs={12} md={12}>
-                                Place: <b>{degreeLetter.address || "NA"}</b>
+                                Place: 
+                                    <b style={{background:`${degreeLetter.address && props.highlight ? props.highlightColor : "white"}`}}>
+                                        {degreeLetter.address || "NA"}
+                                    </b>
                             </Grid>
                             <Grid item xs={12} md={12}>
-                                Date: <b>{degreeLetter.issued_date || "NA"}</b>
+                                Date: <b style={{background:`${degreeLetter.issued_date && props.highlight ? props.highlightColor : "white"}`}}>
+                                    {degreeLetter.issued_date || "NA"}
+                                    </b>
                             </Grid>
                         </Grid>
                     </Grid>
@@ -130,4 +147,7 @@ export default Degree;
 
 Degree.propTypes = {
     readFrom: PropTypes.any,
+    highlight: PropTypes.any,
+    highlightColor: PropTypes.any
+
   };

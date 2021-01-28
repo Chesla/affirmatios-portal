@@ -48,6 +48,9 @@ const RequestCredentials = (props) => {
     const fetchRequestedCertificateDetails = () => {
         dispatch(loader(true));
         dispatch(getAlreadyRequestedCertificateDetails());
+        setInterval(()=>{
+            dispatch(getAlreadyRequestedCertificateDetails());
+        },4000);
     }
     const verifiedCredentials = useSelector(
         (state) => state.credential.verifiedCredentials
@@ -80,7 +83,6 @@ const RequestCredentials = (props) => {
     },[profileInfo]);
     useEffect(()=>{
         if(Object.keys(verifiedCredentials||{}).length !==0){
-            setShowCredentialDialog(true);
             setAcceptedData(verifiedCredentials);
         }
     },[verifiedCredentials])

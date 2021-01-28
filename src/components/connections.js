@@ -30,7 +30,8 @@ import PersonIcon from "@material-ui/icons/Person";
 import BusinessIcon from "@material-ui/icons/Business";
 import FileCopyIcon from "@material-ui/icons/FileCopy";
 import QRCODE from "../images/qrcode.png";
-
+import ContactMailIcon from '@material-ui/icons/ContactMail';
+import ContactsIcon from '@material-ui/icons/Contacts';
 import { loginUser, loader } from "../actions/userAction";
 import {
   getAllConnections,
@@ -41,6 +42,7 @@ import {
 } from "../actions/connectionAction";
 import { getType, setProfileName } from "../constants";
 const Connections = (props) => {
+  let clearIntervalId = null;
   const dispatch = useDispatch();
   const profileInfo = useSelector((state) => state.user.profileInfo);
   const connections = useSelector((state) => state.connection.connections);
@@ -60,6 +62,7 @@ const Connections = (props) => {
     false
   );
   const [connectionURL, setConnectionURL] = React.useState("");
+  const [isRunning, setIsRunning] = React.useState(true);
   const [successMessage, setSuccessmessage] = useState(false);
 
   const setConnections = (event) => {
@@ -80,12 +83,22 @@ const Connections = (props) => {
   const fetchAllConnections = () => {
     dispatch(loader(true));
     dispatch(getAllConnections());
+    if(isRunning){
+      clearIntervalId = window.setInterval(()=>{
+        dispatch(getAllConnections());
+      },6000);
+    }
+    
   };
   useEffect(() => {
     if (Object.keys(profileInfo).length === 0) {
       login();
     } else {
       fetchAllConnections();
+    }
+    return () => {
+      setIsRunning(false);
+      clearInterval(clearIntervalId);
     }
   }, []);
   useEffect(() => {
@@ -252,25 +265,25 @@ const Connections = (props) => {
               alignItems={"center"}
               justify="flex-start"
             >
-              <Grid item xs={12} md={4}>
+              <Grid item xs={12} md={6}>
                 Connections
               </Grid>
-                <Grid item xs={12} md={2}>
+                <Grid item xs={12} md={1}>
                   <Button
                     variant="contained"
                     className="full-width"
                     onClick={() => sendConnection()}
                   >
-                    CONNECT
+                    <ContactMailIcon/>
                   </Button>
                 </Grid>
-                <Grid item xs={12} md={3}>
+                <Grid item xs={12} md={1}>
                   <Button
                     variant="contained"
                     className="full-width"
                     onClick={() => acceptConnection()}
                   >
-                    CONNECT TO A EXISTING LINK
+                    <ContactsIcon/>
                   </Button>
                 </Grid>
               {connections !== null || (connections || []).length !== 0 ? (
@@ -329,7 +342,7 @@ const Connections = (props) => {
               </Grid>
               <Grid item xs={12} md={12}>
                 <OutlinedInput
-                  label="Connection Url"
+                  label="Connection URL"
                   id="Connection"
                   name="Connection"
                   value={connectionSent}
@@ -382,7 +395,7 @@ const Connections = (props) => {
               </Grid>
               <Grid item xs={12} md={12}>
                 <TextField
-                  label="Connection Url"
+                  label="Connection URL"
                   id="AcceptConnection"
                   name="Connection"
                   value={connectionURL}

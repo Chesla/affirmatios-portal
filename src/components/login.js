@@ -48,11 +48,11 @@ const Login = (props) => {
     }
     if (e.target.name === "username" || e.target.name === "firstLastName") {
       setItemData({ ...itemData, ...{ [e.target.name]: e.target.value } });
-      if (e.target.value.match(usernameregex)) {
-        setItemDataError({ ...itemDataError, ...{ [e.target.name]: false } });
-      } else {
-        setItemDataError({ ...itemDataError, ...{ [e.target.name]: true } });
-      }
+      // if (e.target.value.match(usernameregex)) {
+      //   setItemDataError({ ...itemDataError, ...{ [e.target.name]: false } });
+      // } else {
+      //   setItemDataError({ ...itemDataError, ...{ [e.target.name]: true } });
+      // }
     }
     else{
       if (e.target.value.trim() !== ""){
@@ -118,6 +118,7 @@ const Login = (props) => {
             case "medical" : return "Medical";
             case "school" : return "School";
             case "business" : return "Business";
+            case "first-business" : return "Business";
             default : return null;
     }
   }
@@ -171,7 +172,7 @@ const Login = (props) => {
               {loginType!=="login" ?
                 <Grid item xs={12} md={12}>
                   <TextField
-                    label="First Name and Last Name"
+                    label="Name"
                     type="text"
                     id="firstLastName"
                     name="firstLastName"

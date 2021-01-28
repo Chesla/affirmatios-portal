@@ -30,7 +30,7 @@ export const loginUser = (data, actionType) => {
             DID: "QWETVFF",
             firstLastName:"Manipal Hospitals",
             roles:["verifier","issuer"],
-            email:"manipalHospital@gmail.com",
+            email:"admin@manipalhospital.com",
             mobile:"+91 9591795442",
             type:"people",
             agentType
@@ -50,7 +50,7 @@ export const loginUser = (data, actionType) => {
             DID: "QWETVFF",
             firstLastName:"Walmart",
             roles:["verifier","issuer"],
-            email:"walmart@gmail.com",
+            email:"admin@walmart.com",
             mobile:"+91 9591790478",
             type:"people",
             agentType

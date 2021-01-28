@@ -118,7 +118,7 @@ const SchemaCredentials = (props) => {
         },2000);
     }
     const checkRequest = () => {
-        if(paramsSelected.length){
+        if(paramsSelected?.length){
             return false
         }else{
             return true;

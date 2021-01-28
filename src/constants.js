@@ -149,8 +149,6 @@ export const getType = (label) => {
     type = "school";
   }else if(label && label.toLowerCase().includes("employer")){
     type = "business";
-  }else if(label && label.toLowerCase().includes("first-employer")){
-    type = "business";
   }
   return type;
 }

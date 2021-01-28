@@ -48,11 +48,11 @@ const Login = (props) => {
     }
     if (e.target.name === "username" || e.target.name === "firstLastName") {
       setItemData({ ...itemData, ...{ [e.target.name]: e.target.value } });
-      if (e.target.value.match(usernameregex)) {
-        setItemDataError({ ...itemDataError, ...{ [e.target.name]: false } });
-      } else {
-        setItemDataError({ ...itemDataError, ...{ [e.target.name]: true } });
-      }
+      // if (e.target.value.match(usernameregex)) {
+      //   setItemDataError({ ...itemDataError, ...{ [e.target.name]: false } });
+      // } else {
+      //   setItemDataError({ ...itemDataError, ...{ [e.target.name]: true } });
+      // }
     }
     else{
       if (e.target.value.trim() !== ""){
@@ -72,6 +72,16 @@ const Login = (props) => {
             firstLastName: !itemData.firstLastName || itemDataError.firstLastName
         }
         setItemDataError(errorObj);
+      }else{
+        let param = {
+          username: itemData.username,
+          password: itemData.password,
+        };
+        if(loginType!=="login"){
+          param["name"] = itemData.firstLastName;
+        }
+        dispatch(loader(true));
+        dispatch(loginUser(param , loginType));
       }
     }
     else if(!itemData.username || !itemData.password || itemDataError.username || itemDataError.password){
@@ -171,7 +181,7 @@ const Login = (props) => {
               {loginType!=="login" ?
                 <Grid item xs={12} md={12}>
                   <TextField
-                    label="First Name and Last Name"
+                    label="Name"
                     type="text"
                     id="firstLastName"
                     name="firstLastName"

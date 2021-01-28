@@ -50,7 +50,7 @@ export const loginUser = (data, actionType) => {
             DID: "QWETVFF",
             firstLastName:"Walmart",
             roles:["verifier","issuer"],
-            email:"walmart@gmail.com",
+            email:"admin@walmart.com",
             mobile:"+91 9591790478",
             type:"people",
             agentType

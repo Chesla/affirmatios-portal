@@ -159,7 +159,7 @@ export const setProfileName = (type) => {
     case "medical" : return "Manipal Hospital"
     case "school" : return "KIIT UNIVERSITY"
     case "business" : return "WALMART"
-    case "person" : return "Chesla Kar"
+    case "person" : return "Chesla"
     default : return null;
   }
 }
